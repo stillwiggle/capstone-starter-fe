@@ -94,7 +94,7 @@ class UpdateUser extends Component {
 
         //use fetch to make a POST request with the Data from state that has been populated from
         //the data in the form
-        fetch(`http://localhost:5000/api/users/${email}`, {
+        fetch(`${process.env.REACT_APP_API_URL}/api/users/${email}`, {
             method: "PUT", //make sure whe set our method to POST when creating records
             headers: {
                 'content-type': 'application/json',//make sure we set the content-type headers so the API knows it is recieveing JSON data
