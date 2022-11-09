@@ -8,9 +8,9 @@ function GridCards(props) {
         <div className="GridCards container mb-3">
             <Row xs={1} lg={3} className="g-4">
                 {Array.from({ length: 3 }).map((_, idx) => (
-                    <Col>
+                    <Col key={idx}>
                         <Card>
-                            <Card.Img variant="top" src="http://via.placeholder.com/300" />
+                            <Card.Img variant="top" src="https://via.placeholder.com/300" />
                             <Card.Body>
                                 <Card.Title>Card title</Card.Title>
                                 <Card.Text>

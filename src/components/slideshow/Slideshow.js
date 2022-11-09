@@ -8,7 +8,7 @@ function Slideshow(props) {
                 <Carousel.Item>
                     <img
                         className="d-block w-100"
-                        src="http://via.placeholder.com/800x400"
+                        src="https://via.placeholder.com/800x400"
                         alt="First slide"
                     />
                     <Carousel.Caption>
@@ -19,7 +19,7 @@ function Slideshow(props) {
                 <Carousel.Item>
                     <img
                         className="d-block w-100"
-                        src="http://via.placeholder.com/800x400"
+                        src="https://via.placeholder.com/800x400"
                         alt="Second slide"
                     />
                     <Carousel.Caption>
@@ -30,7 +30,7 @@ function Slideshow(props) {
                 <Carousel.Item>
                     <img
                         className="d-block w-100"
-                        src="http://via.placeholder.com/800x400"
+                        src="https://via.placeholder.com/800x400"
                         alt="Third slide"
                     />
                     <Carousel.Caption>
