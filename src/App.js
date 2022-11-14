@@ -6,6 +6,7 @@ import Login from "./pages/login/Login";
 import NotFound from "./pages/notFound/NotFound";
 import Register from "./pages/register/Register";
 import UpdateUser from "./pages/updateUser/UpdateUser";
+import Categories from "./pages/categories/categories";
 
 function App() {
   return (
@@ -30,6 +31,11 @@ function App() {
           exact
           path="/updateuser/:email"
           component={UpdateUser}
+        />
+        <Route
+            exact
+            path="/categories"
+            component={Categories}
         />
         <Route
           exact
