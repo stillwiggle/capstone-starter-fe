@@ -1,9 +1,7 @@
 import React, { Component } from "react"
 
-// importing the ability to retrieve and use the Auth Header for API calls
 import {generateAuthHeader} from "../../utils/authHelper"
 
-// importing components needed for the header
 import Header from "../../components/header/Header"
 import Button from "react-bootstrap/Button";
 
@@ -45,10 +43,7 @@ class Categories extends Component {
     render() {
         return (
             <div className="Users">
-
-                {/* <Header isAuthenticated={this.props.isAuthenticated} /> */}
                 <Header />
-
                 <h3 className="text-center" >Registered Users</h3>
                 <table>
                     <thead>
@@ -70,8 +65,6 @@ class Categories extends Component {
             </div>
         )
     }
-
 }
 
-// export default mustBeAuthenticated(Users)
 export default Categories
