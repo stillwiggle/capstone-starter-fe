@@ -6,7 +6,7 @@ import Login from "./pages/login/Login";
 import NotFound from "./pages/notFound/NotFound";
 import Register from "./pages/register/Register";
 import UpdateUser from "./pages/updateUser/UpdateUser";
-import Categories from "./pages/categories/categories";
+import Users from "./pages/users/Users"
 
 function App() {
   return (
@@ -33,14 +33,14 @@ function App() {
           component={UpdateUser}
         />
         <Route
-            exact
-            path="/categories"
-            component={Categories}
-        />
-        <Route
           exact
           path="/protected"
           component={Protected}
+        />
+        <Route
+          exact
+          path="/users"
+          component={Users}
         />
         <Route
           exact
