@@ -50,6 +50,28 @@ class Users extends Component {
                 <Header />
 
                 <h3 className="text-center" >Registered Users</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email Address</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.users.map((user, idx) => {
+                                return <tr key={idx}>
+                                        <td>{user.firstName}</td>
+                                        <td>{user.lastName}</td>
+                                        <td>{user.email}</td>
+                                        <td>Add Friend</td>
+                                    </tr>
+                                
+                            })
+                        }
+                    </tbody>
+                </table>
 
             </div>
         )
