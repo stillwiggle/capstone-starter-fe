@@ -44,7 +44,7 @@ class Categories extends Component {
         return (
             <div className="Users">
                 <Header />
-                <h3 className="text-center" >Registered Users</h3>
+                <h3 className="text-center" >Categories</h3>
                 <table>
                     <thead>
                     <tr>
