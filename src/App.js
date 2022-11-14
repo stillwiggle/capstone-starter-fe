@@ -7,6 +7,7 @@ import NotFound from "./pages/notFound/NotFound";
 import Register from "./pages/register/Register";
 import UpdateUser from "./pages/updateUser/UpdateUser";
 import Users from "./pages/users/Users"
+import Categories from "./pages/categories/categories";
 
 function App() {
   return (
@@ -41,6 +42,11 @@ function App() {
           exact
           path="/users"
           component={Users}
+        />
+        <Route
+            exact
+            path="/categories"
+            component={Categories}
         />
         <Route
           exact
