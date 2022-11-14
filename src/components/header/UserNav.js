@@ -31,6 +31,8 @@ function UserNav(props) {
         Welcome, Guest
       </Navbar.Text>
       <Nav.Link as={Link} to="/login" href="/login">Sign in</Nav.Link>
+      {/* Will need to delete this later */}
+      <Nav.Link as={Link} to={`/stats/${props.auth.email}`} href={`/stats/${props.auth.email}`}>Your Stats</Nav.Link>
       <Nav.Link as={Link} to="/register" href="/register">Register</Nav.Link>
     </>
   )

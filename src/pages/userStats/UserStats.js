@@ -1,5 +1,6 @@
 import React, { Component } from "react"
-// import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated";
+import Table from 'react-bootstrap/Table'
+
 
 // importing the ability to retrieve and use the Auth Header for API calls
 import {generateAuthHeader} from "../../utils/authHelper"
@@ -54,7 +55,7 @@ class UserStats extends Component {
 
                 <h3 className="text-center" >{this.state.userStats.email}'s Statistics</h3>
                 
-                <table>
+                <Table>
                     <thead>
                         <tr>
                             <th>Number of questions answered</th>
@@ -71,7 +72,7 @@ class UserStats extends Component {
                             <td>{this.state.userStats.winRatio}</td>
                         </tr>
                     </tbody>
-                </table>
+                </Table>
                 
 
             </div>
