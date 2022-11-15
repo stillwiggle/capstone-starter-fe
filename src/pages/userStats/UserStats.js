@@ -8,22 +8,27 @@ import {generateAuthHeader} from "../../utils/authHelper"
 // importing components needed for the header 
 import Header from "../../components/header/Header"
 
-class Users extends Component {
+class UserStats extends Component {
 
     state = {
-        users: []
+        userStats: []
     }
 
     componentDidMount() {
-        this.getUsers()
+
+        //get the student's id from the URL to make the API call
+        const email = this.props.match.params.email;
+
+        // Run the getUserStats method using the email obtained above
+        this.getUserStats(email)
     }
 
-    getUsers= () => {
+    getUserStats= (email) => {
 
         // get the API URL from the environment variable (.env)
         const apiURL = process.env.REACT_APP_API_URL
 
-        fetch(`${apiURL}/api/users`, {
+        fetch(`${apiURL}/api/stats/${email}`, {
             // auth header for using the currently logged in user's token for the API call
             headers: {...generateAuthHeader()}
         })
@@ -31,7 +36,7 @@ class Users extends Component {
             .then((data) =>{
                 this.setState(
                     {
-                        users: data
+                        userStats: data
                     }
                 )
             })
@@ -43,33 +48,31 @@ class Users extends Component {
 
     render() {
         return (
-            <div className="Users">
+            <div className="userStats">
 
                 <Header isAuthenticated={this.props.isAuthenticated} />
 
-                <h3 className="text-center" >Registered Users</h3>
+                <h3 className="text-center" >{this.state.userStats.email}'s Statistics</h3>
+                
                 <Table>
                     <thead>
                         <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email Address</th>
-                            <th>Actions</th>
+                            <th>Number of questions answered</th>
+                            <th>Correct Answers</th>
+                            <th>Wrong Answers</th>
+                            <th>Win Percentage</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.users.map((user, idx) => {
-                                return <tr key={idx}>
-                                        <td>{user.firstName}</td>
-                                        <td>{user.lastName}</td>
-                                        <td>{user.email}</td>
-                                        <td>Add Friend</td>
-                                    </tr>
-                                
-                            })
-                        }
+                        <tr>
+                            <td>{this.state.userStats.questionsAttempted}</td>
+                            <td>{this.state.userStats.correctAnswers}</td>
+                            <td>{this.state.userStats.wrongAnswers}</td>
+                            <td>{this.state.userStats.winRatio}</td>
+                        </tr>
                     </tbody>
                 </Table>
+                
 
             </div>
         )
@@ -77,4 +80,4 @@ class Users extends Component {
 
 }
 
-export default mustBeAuthenticated(Users)
+export default mustBeAuthenticated(UserStats)
