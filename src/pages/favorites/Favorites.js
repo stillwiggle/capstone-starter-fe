@@ -57,9 +57,9 @@ class Favorites extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.favorites.map((user, idx) => {
+                        {this.state.favorites.map((email, idx) => {
                                 return <tr key={idx}>
-                                        <td>{user.email}</td>
+                                        <td>{email}</td>
                                         </tr>
                                 
                             })
