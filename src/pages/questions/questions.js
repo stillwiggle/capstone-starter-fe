@@ -3,21 +3,26 @@ import React, { Component } from "react"
 import {generateAuthHeader} from "../../utils/authHelper"
 
 import Header from "../../components/header/Header"
+import Button from "react-bootstrap/Button";
 
 class Questions extends Component {
 
     state = {
         categories: [],
         categoryAmount: null,
-        formData: {},
-        questionsAnswered: 0,
-        correctAnswer: 0,
-        showViewResults: false
+        formData: [],
+        questionsAnswered: 9,
+        questionCount: 10,
+        correctAnswers: 9,
+        showViewResults: false,
+        currentQuestion: "",
+        currentAnswers: "",
+        correctAnswer: ""
     }
 
     componentDidMount() {
-        console.log("this just ran")
         this.getQuestions()
+        console.log(this.state.formData)
     }
 
     getQuestions= () => {
@@ -33,19 +38,20 @@ class Questions extends Component {
         })
             .then((results) => results.json())
             .then((data) =>{
-                console.log(data)
                 this.setState(
                     {
                         formData: data
                     }
                 )
+                console.log(this.state.formData)
+                console.log(typeof this.state.formData)
             })
+
             .catch((error) => {
                 console.log(error)
             })
-        console.log("This is the 2nd console" + this.state.formData)
     }
-
+    //
     // createAnswerList(){
     //     //this is where we will take questions from the object and create a new array to how the correct and inccorect answers
     //
@@ -74,6 +80,11 @@ class Questions extends Component {
     //         }));
     //     }
     // }
+    //
+    // mapQuestions() {
+    //
+    // }
+
 
     render() {
         return (
@@ -83,15 +94,65 @@ class Questions extends Component {
                 <table>
                     <thead>
                     <tr>
-                        <th>Questions 1</th>
+                        <th>Question {this.state.questionsAnswered + 1}</th>
                     </tr>
                     </thead>
                     <tbody>
 
-                    {/*{this.state.formData.toString()}*/}
+                    {this.state.questionsAnswered < this.state.questionCount &&
+                        this.state.formData.map((question, idx) => {
+                            if (idx == this.state.questionsAnswered) {
+                                return <tr key={idx}>
+                                    <td>{question.question}</td>
+                                </tr>
+                            }
+                        })
+                    }
 
-                    {/*<div>HI{Object.keys(this.state.formData).map(question) => }</div>*/}
+                    {this.state.questionsAnswered < this.state.questionCount &&
+                        this.state.formData.map((question, idx) => {
+                                let newArray = [];
+                                if (idx == this.state.questionsAnswered) {
+                                    newArray.push(question.correctAnswer);
+                                    newArray.push(...question.incorrectAnswers);
+                                    console.log(newArray)
+                                    return <tr key={idx}>
+                                        <Button value={newArray[0]}>
+                                            {newArray[0]}
+                                        </Button>
+                                        <Button value={newArray[1]}>
+                                            {newArray[1]}
+                                        </Button>
+                                        <Button value={newArray[2]}>
+                                            {newArray[2]}
+                                        </Button>
+                                        <Button value={newArray[3]}>
+                                            {newArray[3]}
+                                        </Button>
+                                    </tr>
+                                }
+                            })
+                    }
 
+                    {this.state.questionsAnswered < this.state.questionCount &&
+                        <div>
+                            <Button>
+                                Quit
+                            </Button>
+                            <Button>
+                                Next
+                            </Button>
+                        </div>
+                    }
+                    {console.log("Front end Log" + this.state.formData)}
+
+
+
+
+
+                    {this.state.showViewResults &&
+                        <div>Session Results</div>
+                    }
 
                     </tbody>
                 </table>
