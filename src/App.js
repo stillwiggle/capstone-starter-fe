@@ -6,7 +6,8 @@ import Login from "./pages/login/Login";
 import NotFound from "./pages/notFound/NotFound";
 import Register from "./pages/register/Register";
 import UpdateUser from "./pages/updateUser/UpdateUser";
-import Users from "./pages/users/Users"
+import Users from "./pages/users/Users";
+import Favorites from "./pages/favorites/Favorites"
 
 function App() {
   return (
@@ -44,9 +45,15 @@ function App() {
         />
         <Route
           exact
+          path="/favorites"
+          component={Favorites}
+        />
+        <Route
+          exact
           path="*"
           component={NotFound}
         />
+
       </Switch>
     </div>
   );
