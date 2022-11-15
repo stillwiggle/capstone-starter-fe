@@ -16,7 +16,6 @@ class GlobalStats extends Component {
 
     componentDidMount() {
 
-        console.log(`mount log message`)
         // Run the getglobalStats method using the email obtained above
         this.getglobalStats()
     }
@@ -34,17 +33,13 @@ class GlobalStats extends Component {
             .then((data) =>{
                 this.setState(
                     {
-                        // globalStats: JSON.stringify(data)
                         globalStats: data
                     }
                 )
-                console.log(`Fetch inside message:${this.state.globalStats}`)
-                console.log("Fetch inside message:" + JSON.stringify(this.state.globalStats))
             })
             .catch((error) => {
                 console.log(error)
             })
-            console.log(`Fetch outside message: ${this.state.globalStats}`)
 
     }
 
@@ -55,7 +50,6 @@ class GlobalStats extends Component {
                 <Header isAuthenticated={this.props.isAuthenticated} />
 
                 <h3 className="text-center" >Global Statistics</h3>
-                {/* <h3 className="text-center" >{this.state.globalStats.email}'s Statistics</h3> */}
 
                 <Table>
                     <thead>
