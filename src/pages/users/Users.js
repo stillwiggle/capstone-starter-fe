@@ -15,7 +15,6 @@ class Users extends Component {
     }
 
     componentDidMount() {
-        console.log("this just ran")
         this.getUsers()
     }
 
@@ -30,7 +29,6 @@ class Users extends Component {
         })
             .then((results) => results.json())
             .then((data) =>{
-                console.log(data)
                 this.setState(
                     {
                         users: data
