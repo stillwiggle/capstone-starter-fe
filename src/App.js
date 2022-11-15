@@ -8,6 +8,7 @@ import Register from "./pages/register/Register";
 import UpdateUser from "./pages/updateUser/UpdateUser";
 import Users from "./pages/users/Users"
 import Categories from "./pages/categories/categories";
+import Questions from "./pages/questions/questions";
 
 function App() {
   return (
@@ -47,6 +48,11 @@ function App() {
             exact
             path="/categories"
             component={Categories}
+        />
+        <Route
+            exact
+            path="/questions"
+            component={Questions}
         />
         <Route
           exact
