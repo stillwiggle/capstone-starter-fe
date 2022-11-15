@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import Table from 'react-bootstrap/Table'
-// import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated";
+import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated";
 
 // importing the ability to retrieve and use the Auth Header for API calls
 import {generateAuthHeader} from "../../utils/authHelper"
@@ -47,8 +47,7 @@ class Users extends Component {
         return (
             <div className="Users">
 
-                {/* <Header isAuthenticated={this.props.isAuthenticated} /> */}
-                <Header />
+                <Header isAuthenticated={this.props.isAuthenticated} />
 
                 <h3 className="text-center" >Registered Users</h3>
                 <Table>
@@ -80,5 +79,4 @@ class Users extends Component {
 
 }
 
-// export default mustBeAuthenticated(Users)
-export default Users
+export default mustBeAuthenticated(Users)
