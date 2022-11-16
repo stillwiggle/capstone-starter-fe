@@ -23,11 +23,14 @@ class Questions extends Component {
 
     componentDidMount() {
         let questionsAnswered = parseInt(localStorage.getItem("questionsAnswered"))
-            this.getQuestions()
+        this.getQuestions()
+
         if (questionsAnswered > 0){
             this.setQuestionsAnsweredNumber()
             this.determineCorrectAnswer()
             this.resetCurrentQuestionAndAnswer()
+        } else {
+            localStorage.setItem("correctAnswers", "0")
         }
     }
 
@@ -98,6 +101,13 @@ class Questions extends Component {
     resetCurrentQuestionAndAnswer() {
         localStorage.setItem("currentAnswers", "")
         localStorage.setItem("currentQuestion", "")
+    }
+
+    resetAllLocalStorageValues() {
+        localStorage.setItem("currentAnswers", "")
+        localStorage.setItem("currentQuestion", "")
+        localStorage.setItem("correctAnswers", "0")
+        localStorage.setItem("questionsAnswered", "0")
     }
 
 
@@ -175,9 +185,15 @@ class Questions extends Component {
                     }
 
                     <div>
+
                         <Form onSubmit={this.handleSubmit}>
                             <Button variant="primary" type="submit">
                                 Submit
+                            </Button>
+                        </Form>
+                        <Form onSubmit={this.resetAllLocalStorageValues}>
+                            <Button variant="primary" type="submit">
+                                Reset
                             </Button>
                         </Form>
                     </div>
