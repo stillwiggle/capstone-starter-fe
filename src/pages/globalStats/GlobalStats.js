@@ -62,7 +62,7 @@ class GlobalStats extends Component {
                         {this.state.globalStats.map((user, idx) => {
                             return <tr key={idx}>
                                 <td>{user.email}</td>
-                                <td>{user.winRatio}</td>
+                                <td>{user.winRatio}%</td>
                             </tr>
                             })
                         }
