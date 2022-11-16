@@ -22,9 +22,13 @@ class Questions extends Component {
     }
 
     componentDidMount() {
-        this.getQuestions()
-        this.setQuestionsAnsweredNumber()
-
+        let questionsAnswered = parseInt(localStorage.getItem("questionsAnswered"))
+            this.getQuestions()
+        if (questionsAnswered > 0){
+            this.setQuestionsAnsweredNumber()
+            this.determineCorrectAnswer()
+            this.resetCurrentQuestionAndAnswer()
+        }
     }
 
     getQuestions= () => {
@@ -53,33 +57,49 @@ class Questions extends Component {
     }
 
     handleSubmit = (e) => {
+        console.log(this.state.questionsAnswered)
         let newValue = this.state.questionsAnswered + 1
+        console.log(newValue)
         localStorage.setItem("questionsAnswered", newValue.toString())
+        console.log("Questions Answered" + localStorage.getItem("questionsAnswered"))
+        console.log("Correct Answers" + localStorage.getItem("correctAnswers"))
         e.preventDefault()
         window.location.reload();
     }
 
-    handleChange = (e) => {
-
-        // localStorage.setItem("currentAnswers", e.target.id.toString())
-        // return console.log("It worked " + localStorage.getItem("currentAnswers"))
-        //
-        // this.state.formData.map((question, idx) => {
-        //     return localStorage.setItem("currentAnswers", e.target.id.toString())
-        // })
-        //
-        // // console.log(parseInt(e.target.id))
-        // // return null
-    }
 
     setCurrentAnswer = (e) => {
         localStorage.setItem("currentAnswers", e.target.value.toString())
         return console.log("It worked " + localStorage.getItem("currentAnswers"))
     }
 
-//     if(idx === parseInt(e.target.id)) {
-//     if(e.target.value.toString() === question.correctAnswer){
-//     localStorage.setItem("questionsAnswered", newValue.toString())
+
+    determineCorrectAnswer() {
+        let correctAnswer = localStorage.getItem("correctAnswer")
+        let currentAnswer = localStorage.getItem("currentAnswers")
+        let correctAnswerCount = localStorage.getItem("correctAnswers")
+
+        if (correctAnswerCount == "NaN"){
+            localStorage.setItem("correctAnswers", this.state.correctAnswers.toString())
+        }
+
+        console.log("determine correct answer working")
+        if(currentAnswer === correctAnswer) {
+            let currentCorrectAnswers = parseInt(localStorage.getItem("correctAnswers"))
+            let newCorrectAnswerCount = currentCorrectAnswers + 1
+            localStorage.setItem("correctAnswers", newCorrectAnswerCount.toString())
+            console.log("Your answer is correct")
+        } else {
+            console.log("Your answer is not correct")
+        }
+    }
+
+
+    resetCurrentQuestionAndAnswer() {
+        localStorage.setItem("currentAnswers", "")
+        localStorage.setItem("currentQuestion", "")
+    }
+
 
     setQuestionsAnsweredNumber() {
         let currentQuestion = localStorage.getItem("questionsAnswered");
@@ -87,10 +107,12 @@ class Questions extends Component {
         if (currentQuestion > 10){
             this.setState({showViewResults: true})
             console.log(currentQuestion)
+        } if (currentQuestion == NaN) {
+            this.setState({questionsAnswered: 0})
         } else {
+            console.log(localStorage.getItem("questionsAnswered"))
             this.setState({questionsAnswered: parseInt(currentQuestion)})
         }
-
     }
 
 
@@ -98,7 +120,7 @@ class Questions extends Component {
         return (
             <div className="Users">
                 <Header />
-                <h3 className="text-center" >Questions</h3>
+                <h3 className="text-center" >Questions<div>{localStorage.getItem("correctAnswers")}</div></h3>
                 <table>
                     <thead>
                     {!this.state.showViewResults &&
@@ -107,7 +129,12 @@ class Questions extends Component {
                     </tr> }
                     {this.state.showViewResults &&
                         <tr>
-                            <th>Results!</th>
+
+                            <div>
+                                <th>Results!</th>
+                                <div>{localStorage.getItem("correctAnswers")}</div>
+                                <div>{this.state.questionCount}</div>
+                            </div>
                         </tr> }
                     </thead>
                     <tbody>
@@ -126,10 +153,11 @@ class Questions extends Component {
                         this.state.formData.map((question, idx) => {
                                 let newArray = [];
                                 if (idx == this.state.questionsAnswered) {
-                                    newArray.push(question.correctAnswer);
+                                    localStorage.setItem("correctAnswer", question.correctAnswer)
+                                    newArray.push(question.correctAnswer)
                                     newArray.push(...question.incorrectAnswers)
                                     return <tr key={idx}>
-                                        <Button id={idx.toString()} onClick={this.setCurrentAnswer} value={newArray[0]}>
+                                        <Button questionindex={idx.toString()} onClick={this.setCurrentAnswer} value={newArray[0]} correctanswer={question.correctAnswer}>
                                             {newArray[0]}
                                         </Button>
                                         <Button key={idx} value={newArray[1]}>
