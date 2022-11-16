@@ -31,6 +31,8 @@ class GlobalStats extends Component {
         })
             .then((results) => results.json())
             .then((data) =>{
+                // Sorts the data by winRatio before setting the state
+                data.sort((a, b) => b.winRatio - a.winRatio)
                 this.setState(
                     {
                         globalStats: data
@@ -40,7 +42,7 @@ class GlobalStats extends Component {
             .catch((error) => {
                 console.log(error)
             })
-
+            
     }
 
     render() {
