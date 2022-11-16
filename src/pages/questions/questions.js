@@ -59,21 +59,16 @@ class Questions extends Component {
             })
     }
 
+    //After the user submits their answer this function will set the questionsanswered local storage value to +1
     handleSubmit = (e) => {
-        console.log(this.state.questionsAnswered)
         let newValue = this.state.questionsAnswered + 1
-        console.log(newValue)
         localStorage.setItem("questionsAnswered", newValue.toString())
-        console.log("Questions Answered" + localStorage.getItem("questionsAnswered"))
-        console.log("Correct Answers" + localStorage.getItem("correctAnswers"))
-        e.preventDefault()
-        window.location.reload();
     }
 
 
     setCurrentAnswer = (e) => {
+        //This takes the value of the event target and set's it as the current answer in local storage
         localStorage.setItem("currentAnswers", e.target.value.toString())
-        return console.log("It worked " + localStorage.getItem("currentAnswers"))
     }
 
 
@@ -86,7 +81,6 @@ class Questions extends Component {
             localStorage.setItem("correctAnswers", this.state.correctAnswers.toString())
         }
 
-        console.log("determine correct answer working")
         if(currentAnswer === correctAnswer) {
             let currentCorrectAnswers = parseInt(localStorage.getItem("correctAnswers"))
             let newCorrectAnswerCount = currentCorrectAnswers + 1
@@ -97,12 +91,13 @@ class Questions extends Component {
         }
     }
 
-
+//Helper function to reset current question and answer in local storage for the next question
     resetCurrentQuestionAndAnswer() {
         localStorage.setItem("currentAnswers", "")
         localStorage.setItem("currentQuestion", "")
     }
 
+//This is helper function to reset all local storage values so you can retry the questions
     resetAllLocalStorageValues() {
         localStorage.setItem("currentAnswers", "")
         localStorage.setItem("currentQuestion", "")
@@ -110,17 +105,16 @@ class Questions extends Component {
         localStorage.setItem("questionsAnswered", "0")
     }
 
-
+//This is the logic to set the localstorage value of questions answered
     setQuestionsAnsweredNumber() {
         let currentQuestion = localStorage.getItem("questionsAnswered");
 
         if (currentQuestion > 10){
             this.setState({showViewResults: true})
-            console.log(currentQuestion)
+        //Sometimes the questionsAnswered will have a value of NaN. This if statement is to get past this
         } if (currentQuestion == NaN) {
             this.setState({questionsAnswered: 0})
         } else {
-            console.log(localStorage.getItem("questionsAnswered"))
             this.setState({questionsAnswered: parseInt(currentQuestion)})
         }
     }
@@ -133,10 +127,12 @@ class Questions extends Component {
                 <h3 className="text-center" >Questions<div>{localStorage.getItem("correctAnswers")}</div></h3>
                 <table>
                     <thead>
+                    {/*This will only show if showViewResults State variable is true*/}
                     {!this.state.showViewResults &&
                     <tr>
                         <th>Question {this.state.questionsAnswered}</th>
                     </tr> }
+                    {/*This will only show if showViewResults State variable is false*/}
                     {this.state.showViewResults &&
                         <tr>
 
@@ -148,7 +144,7 @@ class Questions extends Component {
                         </tr> }
                     </thead>
                     <tbody>
-
+                    {/*This will only show if showViewResults State variable is true*/}
                     {!this.state.showViewResults &&
                         this.state.formData.map((question, idx) => {
                             if (idx == this.state.questionsAnswered) {
@@ -158,7 +154,7 @@ class Questions extends Component {
                             }
                         })
                     }
-
+                    {/*This will only show if showViewResults State variable is true*/}
                     {!this.state.showViewResults &&
                         this.state.formData.map((question, idx) => {
                                 let newArray = [];
