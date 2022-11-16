@@ -35,6 +35,9 @@ function UserForm({ handleChange, handleSubmit, formData, isUpdate }) {
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
+                <Button variant="danger" type="delete">
+                    Delete Profile
+                </Button>
             </Form>
         </div>
     )
