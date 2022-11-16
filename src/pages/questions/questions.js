@@ -4,6 +4,7 @@ import {generateAuthHeader} from "../../utils/authHelper"
 
 import Header from "../../components/header/Header"
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 class Questions extends Component {
 
@@ -11,9 +12,9 @@ class Questions extends Component {
         categories: [],
         categoryAmount: null,
         formData: [],
-        questionsAnswered: 9,
+        questionsAnswered: 0,
         questionCount: 10,
-        correctAnswers: 9,
+        correctAnswers: 0,
         showViewResults: false,
         currentQuestion: "",
         currentAnswers: "",
@@ -22,7 +23,8 @@ class Questions extends Component {
 
     componentDidMount() {
         this.getQuestions()
-        console.log(this.state.formData)
+        this.setQuestionsAnsweredNumber()
+
     }
 
     getQuestions= () => {
@@ -43,47 +45,53 @@ class Questions extends Component {
                         formData: data
                     }
                 )
-                console.log(this.state.formData)
-                console.log(typeof this.state.formData)
             })
 
             .catch((error) => {
                 console.log(error)
             })
     }
-    //
-    // createAnswerList(){
-    //     //this is where we will take questions from the object and create a new array to how the correct and inccorect answers
-    //
-    //     let questionIndex = this.state.questionsAnswered;
-    //     let answerList = [];
-    //
-    //
-    // }
-    //
-    // submitAnswer(userAnswer) {
-    //     //this is function where the questionAnswered state variable will add to the count when the user answers a question
-    //     let questionIndex = this.state.questionsAnswered;
-    //
-    //     if(userAnswer === this.state.formData[questionIndex].correctAnswer) {
-    //         // this.state.questionsAnswered++;
-    //         this.setState((questionsAnswered, props) => ({
-    //             counter: questionsAnswered.counter + 1
-    //         }));
-    //
-    //         this.setState((correctAnswers, props) => ({
-    //             counter: correctAnswers.counter + 1
-    //         }));
-    //     } else {
-    //         this.setState((questionsAnswered, props) => ({
-    //             counter: questionsAnswered.counter + 1
-    //         }));
-    //     }
-    // }
-    //
-    // mapQuestions() {
-    //
-    // }
+
+    handleSubmit = (e) => {
+        let newValue = this.state.questionsAnswered + 1
+        localStorage.setItem("questionsAnswered", newValue.toString())
+        e.preventDefault()
+        window.location.reload();
+    }
+
+    handleChange = (e) => {
+
+        // localStorage.setItem("currentAnswers", e.target.id.toString())
+        // return console.log("It worked " + localStorage.getItem("currentAnswers"))
+        //
+        // this.state.formData.map((question, idx) => {
+        //     return localStorage.setItem("currentAnswers", e.target.id.toString())
+        // })
+        //
+        // // console.log(parseInt(e.target.id))
+        // // return null
+    }
+
+    setCurrentAnswer = (e) => {
+        localStorage.setItem("currentAnswers", e.target.value.toString())
+        return console.log("It worked " + localStorage.getItem("currentAnswers"))
+    }
+
+//     if(idx === parseInt(e.target.id)) {
+//     if(e.target.value.toString() === question.correctAnswer){
+//     localStorage.setItem("questionsAnswered", newValue.toString())
+
+    setQuestionsAnsweredNumber() {
+        let currentQuestion = localStorage.getItem("questionsAnswered");
+
+        if (currentQuestion > 10){
+            this.setState({showViewResults: true})
+            console.log(currentQuestion)
+        } else {
+            this.setState({questionsAnswered: parseInt(currentQuestion)})
+        }
+
+    }
 
 
     render() {
@@ -93,13 +101,18 @@ class Questions extends Component {
                 <h3 className="text-center" >Questions</h3>
                 <table>
                     <thead>
+                    {!this.state.showViewResults &&
                     <tr>
-                        <th>Question {this.state.questionsAnswered + 1}</th>
-                    </tr>
+                        <th>Question {this.state.questionsAnswered}</th>
+                    </tr> }
+                    {this.state.showViewResults &&
+                        <tr>
+                            <th>Results!</th>
+                        </tr> }
                     </thead>
                     <tbody>
 
-                    {this.state.questionsAnswered < this.state.questionCount &&
+                    {!this.state.showViewResults &&
                         this.state.formData.map((question, idx) => {
                             if (idx == this.state.questionsAnswered) {
                                 return <tr key={idx}>
@@ -109,24 +122,23 @@ class Questions extends Component {
                         })
                     }
 
-                    {this.state.questionsAnswered < this.state.questionCount &&
+                    {!this.state.showViewResults &&
                         this.state.formData.map((question, idx) => {
                                 let newArray = [];
                                 if (idx == this.state.questionsAnswered) {
                                     newArray.push(question.correctAnswer);
-                                    newArray.push(...question.incorrectAnswers);
-                                    console.log(newArray)
+                                    newArray.push(...question.incorrectAnswers)
                                     return <tr key={idx}>
-                                        <Button value={newArray[0]}>
+                                        <Button id={idx.toString()} onClick={this.setCurrentAnswer} value={newArray[0]}>
                                             {newArray[0]}
                                         </Button>
-                                        <Button value={newArray[1]}>
+                                        <Button key={idx} value={newArray[1]}>
                                             {newArray[1]}
                                         </Button>
-                                        <Button value={newArray[2]}>
+                                        <Button key={idx} value={newArray[2]}>
                                             {newArray[2]}
                                         </Button>
-                                        <Button value={newArray[3]}>
+                                        <Button key={idx} value={newArray[3]}>
                                             {newArray[3]}
                                         </Button>
                                     </tr>
@@ -134,26 +146,13 @@ class Questions extends Component {
                             })
                     }
 
-                    {this.state.questionsAnswered < this.state.questionCount &&
-                        <div>
-                            <Button>
-                                Quit
+                    <div>
+                        <Form onSubmit={this.handleSubmit}>
+                            <Button variant="primary" type="submit">
+                                Submit
                             </Button>
-                            <Button>
-                                Next
-                            </Button>
-                        </div>
-                    }
-                    {console.log("Front end Log" + this.state.formData)}
-
-
-
-
-
-                    {this.state.showViewResults &&
-                        <div>Session Results</div>
-                    }
-
+                        </Form>
+                    </div>
                     </tbody>
                 </table>
 
