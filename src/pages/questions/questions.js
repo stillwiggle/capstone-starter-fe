@@ -130,7 +130,7 @@ class Questions extends Component {
                     {/*This will only show if showViewResults State variable is true*/}
                     {!this.state.showViewResults &&
                     <tr>
-                        <th>Question {this.state.questionsAnswered}</th>
+                        <th>Question {this.state.questionsAnswered + 1}</th>
                     </tr> }
                     {/*This will only show if showViewResults State variable is false*/}
                     {this.state.showViewResults &&
