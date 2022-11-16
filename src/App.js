@@ -6,7 +6,9 @@ import Login from "./pages/login/Login";
 import NotFound from "./pages/notFound/NotFound";
 import Register from "./pages/register/Register";
 import UpdateUser from "./pages/updateUser/UpdateUser";
-import Users from "./pages/users/Users"
+import Users from "./pages/users/Users";
+import Favorites from "./pages/favorites/Favorites";
+import UserStats from "./pages/userStats/UserStats";
 import Categories from "./pages/categories/categories";
 import Questions from "./pages/questions/questions";
 
@@ -56,9 +58,25 @@ function App() {
         />
         <Route
           exact
+          path="/stats/:email"
+          component={UserStats}
+        />
+        <Route
+          exact
+          path="/stats/:email"
+          component={UserStats}
+        />
+        <Route
+          exact
+          path="/favorites"
+          component={Favorites}
+        />
+        <Route
+          exact
           path="*"
           component={NotFound}
         />
+
       </Switch>
     </div>
   );

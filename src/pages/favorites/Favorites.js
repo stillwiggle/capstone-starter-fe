@@ -1,37 +1,38 @@
 import React, { Component } from "react"
-import Table from 'react-bootstrap/Table'
-import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated";
+// import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated";
 
 // importing the ability to retrieve and use the Auth Header for API calls
-import {generateAuthHeader} from "../../utils/authHelper"
+import {generateAuthHeader,getUserEmail} from "../../utils/authHelper"
 
 // importing components needed for the header 
 import Header from "../../components/header/Header"
 
-class Users extends Component {
+class Favorites extends Component {
 
     state = {
-        users: []
+        favorites: []
     }
 
     componentDidMount() {
-        this.getUsers()
+        console.log("this just ran")
+        this.getFavorites()
     }
 
-    getUsers= () => {
+    getFavorites= () => {
 
         // get the API URL from the environment variable (.env)
         const apiURL = process.env.REACT_APP_API_URL
 
-        fetch(`${apiURL}/api/users`, {
+        fetch(`${apiURL}/api/stats/${getUserEmail()}`, {
             // auth header for using the currently logged in user's token for the API call
             headers: {...generateAuthHeader()}
         })
             .then((results) => results.json())
             .then((data) =>{
+                console.log(data)
                 this.setState(
                     {
-                        users: data
+                        favorites: data.favoritesList
                     }
                 )
             })
@@ -43,33 +44,28 @@ class Users extends Component {
 
     render() {
         return (
-            <div className="Users">
+            <div className="Favorites">
 
-                <Header isAuthenticated={this.props.isAuthenticated} />
+                {/* <Header isAuthenticated={this.props.isAuthenticated} /> */}
+                <Header />
 
-                <h3 className="text-center" >Registered Users</h3>
-                <Table>
+                <h3 className="text-center" >Favorites</h3>
+                <table>
                     <thead>
                         <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
                             <th>Email Address</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.users.map((user, idx) => {
+                        {this.state.favorites.map((email, idx) => {
                                 return <tr key={idx}>
-                                        <td>{user.firstName}</td>
-                                        <td>{user.lastName}</td>
-                                        <td>{user.email}</td>
-                                        <td>Add Friend</td>
-                                    </tr>
+                                        <td>{email}</td>
+                                        </tr>
                                 
                             })
                         }
                     </tbody>
-                </Table>
+                </table>
 
             </div>
         )
@@ -77,4 +73,5 @@ class Users extends Component {
 
 }
 
-export default mustBeAuthenticated(Users)
+// export default mustBeAuthenticated(Users)
+export default Favorites
