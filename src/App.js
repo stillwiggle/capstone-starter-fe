@@ -53,7 +53,7 @@ function App() {
         />
         <Route
             exact
-            path="/questions"
+            path="/questions/:category"
             component={Questions}
         />
         <Route

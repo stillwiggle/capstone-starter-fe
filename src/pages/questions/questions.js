@@ -5,6 +5,8 @@ import {generateAuthHeader} from "../../utils/authHelper"
 import Header from "../../components/header/Header"
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import {Modal} from "react-bootstrap";
+import {useParams} from "react-router-dom";
 
 class Questions extends Component {
 
@@ -15,6 +17,7 @@ class Questions extends Component {
         questionsAnswered: 0,
         questionCount: 10,
         correctAnswers: 0,
+        resultModal: false,
         showViewResults: false,
         currentQuestion: "",
         currentAnswers: "",
@@ -39,7 +42,9 @@ class Questions extends Component {
         // get the API URL from the environment variable (.env)
         const apiURL = process.env.REACT_APP_API_URL
 
-        const category = 'Geography';
+        //This pulls the category from the URL param
+        let category = this.props.match.params.category
+
 
         fetch(`${apiURL}/api/questions/category?category=`+category, {
             // auth header for using the currently logged in user's token for the API call
@@ -61,8 +66,55 @@ class Questions extends Component {
 
     //After the user submits their answer this function will set the questionsanswered local storage value to +1
     handleSubmit = (e) => {
+        e.preventDefault()
+
         let newValue = this.state.questionsAnswered + 1
         localStorage.setItem("questionsAnswered", newValue.toString())
+
+        //
+        // const category = 'Geography';
+        //
+        //
+        // let userEmail = "string@gmail.com"
+        //
+        // const apiURL = process.env.REACT_APP_API_URL
+        // let apiBody = {
+        //     questionsAttempted: "10",
+        //     correctAnswers: 5
+        // }
+        // fetch(`${apiURL}/api/stats/${userEmail}`, {
+        //     method: 'PATCH',
+        //     headers: {...generateAuthHeader()},
+        //     body: JSON.stringify(apiBody)
+        // }).then((r) => console.log(r.status))
+        //     .catch((error) => {
+        //                 console.log(error)
+        //             })
+        //
+        // fetch(`${apiURL}/api/questions/category?category=`+category, {
+        //     // auth header for using the currently logged in user's token for the API call
+        //     headers: {...generateAuthHeader()}
+        // })
+        //     .then((results) => results.json())
+        //     .then((data) =>{
+        //         this.setState(
+        //             {
+        //                 formData: data
+        //             }
+        //         )
+        //     })
+        //
+        //     .catch((error) => {
+        //         console.log(error)
+        //     })
+    }
+
+    handleClose = () => {
+        this.setState({resultModal: false})
+    }
+
+    handleShow = () => {
+        this.setState({resultModal: true})
     }
 
 
@@ -195,6 +247,25 @@ class Questions extends Component {
                     </div>
                     </tbody>
                 </table>
+
+                <Button variant="primary" onClick={this.handleShow}>
+                    Launch demo modal
+                </Button>
+
+                <Modal show={this.state.resultModal} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Question {this.state.questionsAnswered}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body><h5>Woohoo, you're reading this text in a modal!</h5></Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={this.handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={this.handleClose}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
 
             </div>
         )
