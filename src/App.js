@@ -12,6 +12,7 @@ import UserStats from "./pages/userStats/UserStats";
 import Categories from "./pages/categories/categories";
 import GlobalStats from "./pages/globalStats/GlobalStats";
 import Questions from "./pages/questions/questions";
+import LoggedIn from "./pages/loggedIn/LoggedIn";
 
 function App() {
   return (
@@ -21,6 +22,11 @@ function App() {
           exact
           path="/"
           component={Home}
+        />
+        <Route
+          exact
+          path="/loggedin"
+          component={LoggedIn}
         />
         <Route
           exact
@@ -48,19 +54,14 @@ function App() {
           component={Users}
         />
         <Route
-            exact
-            path="/categories"
-            component={Categories}
-        />
-        <Route
-            exact
-            path="/questions"
-            component={Questions}
+          exact
+          path="/categories"
+          component={Categories}
         />
         <Route
           exact
-          path="/stats/:email"
-          component={UserStats}
+          path="/questions/:category"
+          component={Questions}
         />
         <Route
           exact
