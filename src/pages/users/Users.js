@@ -4,6 +4,12 @@ import Alert from 'react-bootstrap/Alert';
 
 import Table from 'react-bootstrap/Table'
 import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated";
+import Nav from "react-bootstrap/Nav";
+import Card from "react-bootstrap/Card";
+import { Container } from "react-bootstrap";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
 
 // importing the ability to retrieve and use the Auth Header for API calls
 import { generateAuthHeader, getUserEmail } from "../../utils/authHelper"
@@ -131,31 +137,42 @@ class Users extends Component {
                     {flashMessage && <Alert variant="info">{flashMessage}</Alert>}
                 </div>
 
-                <h3 className="text-center" >Registered Users</h3>
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email Address</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.users.map((user, idx) => {
-                            return <tr key={idx}>
-                                <td>{user.firstName}</td>
-                                <td>{user.lastName}</td>
-                                <td>{user.email}</td>
-                                <td><button {...((this.isFriend(user.email) || user.email === getUserEmail()) && { disabled: true })} data-email={user.email} onClick={this.addFavorites} className="update-btn">Add to Favorites</button></td>
-                            </tr>
+                {/* <h3 className="text-center" >Registered Users</h3> */}
+                <Card style={{
+                    width: '50%', marginTop: '5rem', height: '100%', margin: 'auto', padding: '10px',
+                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
+                }}>
 
-                        })
-                        }
-                    </tbody>
-                </Table>
+                    <Card.Body>
+                        <Card.Title style={{ marginBottom: '6rem', marginTop: '2rem', textAlign: 'center' }}>Registered Users</Card.Title>
+                        <Container>
+                        <Table>
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email Address</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.users.map((user, idx) => {
+                                    return <tr key={idx}>
+                                        <td>{user.firstName}</td>
+                                        <td>{user.lastName}</td>
+                                        <td>{user.email}</td>
+                                        <td><button {...((this.isFriend(user.email) || user.email === getUserEmail()) && { disabled: true })} data-email={user.email} onClick={this.addFavorites} className="update-btn">Add to Favorites</button></td>
+                                    </tr>
 
-            </div>
+                                })
+                                }
+                            </tbody>
+                        </Table>
+                    </Container>
+                </Card.Body>
+            </Card>
+
+            </div >
         )
     }
 
