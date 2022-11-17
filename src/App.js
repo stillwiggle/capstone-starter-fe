@@ -11,6 +11,7 @@ import Favorites from "./pages/favorites/Favorites";
 import UserStats from "./pages/userStats/UserStats";
 import Categories from "./pages/categories/categories";
 import GlobalStats from "./pages/globalStats/GlobalStats";
+import Questions from "./pages/questions/questions";
 
 function App() {
   return (
@@ -58,8 +59,8 @@ function App() {
         />
         <Route
           exact
-          path="/global-stats/"
-          component={GlobalStats}
+          path="/stats/:email"
+          component={UserStats}
         />
         <Route
           exact
