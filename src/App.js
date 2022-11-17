@@ -53,6 +53,11 @@ function App() {
             component={Categories}
         />
         <Route
+            exact
+            path="/questions"
+            component={Questions}
+        />
+        <Route
           exact
           path="/stats/:email"
           component={UserStats}
@@ -66,6 +71,11 @@ function App() {
           exact
           path="/favorites"
           component={Favorites}
+        />
+        <Route
+          exact
+          path="/global-stats"
+          component={GlobalStats}
         />
         <Route
           exact
