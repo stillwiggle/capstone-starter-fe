@@ -73,7 +73,6 @@ class UserStats extends Component {
                                     <tr>
                                         <th>Number of questions answered</th>
                                         <th>Correct Answers</th>
-                                        <th>Wrong Answers</th>
                                         <th>Win Percentage</th>
                                     </tr>
                                 </thead>
@@ -81,11 +80,11 @@ class UserStats extends Component {
                                     <tr>
                                         <td>{this.state.userStats.questionsAttempted}</td>
                                         <td>{this.state.userStats.correctAnswers}</td>
-                                        <td>{this.state.userStats.wrongAnswers}</td>
                                         <td>{this.state.userStats.winRatio}</td>
                                     </tr>
                                 </tbody>
                             </Table>
+                            <Favorites />
                         </Container>
                     </Card.Body>
                 </Card>

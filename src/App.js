@@ -12,7 +12,6 @@ import UserStats from "./pages/userStats/UserStats";
 import Categories from "./pages/categories/categories";
 import GlobalStats from "./pages/globalStats/GlobalStats";
 import Questions from "./pages/questions/questions";
-import LoggedIn from "./pages/loggedIn/LoggedIn";
 
 function App() {
   return (
@@ -22,11 +21,6 @@ function App() {
           exact
           path="/"
           component={Home}
-        />
-        <Route
-          exact
-          path="/loggedin"
-          component={LoggedIn}
         />
         <Route
           exact
