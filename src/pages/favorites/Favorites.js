@@ -6,7 +6,7 @@ import {generateAuthHeader,getUserEmail} from "../../utils/authHelper"
 
 // importing components needed for the header 
 import Header from "../../components/header/Header"
-import FavoritesForm from "../../components/favoritesform/FavoritesForm";
+
 
 class Favorites extends Component {
 
