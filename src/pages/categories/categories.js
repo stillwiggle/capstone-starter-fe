@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-
+import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated"
 import {generateAuthHeader} from "../../utils/authHelper"
 
 import Header from "../../components/header/Header"
@@ -56,7 +56,7 @@ class Categories extends Component {
     render() {
         return (
             <div className="Users">
-                <Header />
+                <Header isAuthenticated={this.props.isAuthenticated} />
                 <h3 className="text-center" style={{marginTop:'5rem', marginBottom: '5rem'}}>Categories</h3>
 
                 <Card style={{width: '28rem', marginTop:'5rem', height: '30rem', margin: 'auto', padding: '10px',
@@ -85,4 +85,4 @@ class Categories extends Component {
     }
 }
 
-export default Categories
+export default mustBeAuthenticated(Categories)

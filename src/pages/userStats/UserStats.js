@@ -7,6 +7,7 @@ import {generateAuthHeader} from "../../utils/authHelper"
 
 // importing components needed for the header 
 import Header from "../../components/header/Header"
+import Favorites from "../favorites/Favorites";
 
 class UserStats extends Component {
 
@@ -72,7 +73,6 @@ class UserStats extends Component {
                         </tr>
                     </tbody>
                 </Table>
-                
 
             </div>
         )
