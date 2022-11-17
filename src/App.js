@@ -69,6 +69,11 @@ function App() {
         />
         <Route
           exact
+          path="/global-stats"
+          component={GlobalStats}
+        />
+        <Route
+          exact
           path="*"
           component={NotFound}
         />
