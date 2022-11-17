@@ -35,7 +35,6 @@ function UserForm({ handleChange, handleSubmit, formData, isUpdate }) {
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
-                
             </Form>
         </div>
     )
