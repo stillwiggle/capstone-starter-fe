@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import {Modal} from "react-bootstrap";
 import {useParams} from "react-router-dom";
+import Card from "react-bootstrap/Card";
 
 class Questions extends Component {
 
@@ -21,7 +22,9 @@ class Questions extends Component {
         showViewResults: false,
         currentQuestion: "",
         currentAnswers: "",
-        correctAnswer: ""
+        correctAnswer: "",
+        userStatsQuestionCount: 0,
+        userStatsCorrectCount: 0
     }
 
     componentDidMount() {
@@ -65,48 +68,10 @@ class Questions extends Component {
     }
 
     //After the user submits their answer this function will set the questionsanswered local storage value to +1
-    handleSubmit = (e) => {
-        e.preventDefault()
-
+    nextQuestion = (e) => {
         let newValue = this.state.questionsAnswered + 1
         localStorage.setItem("questionsAnswered", newValue.toString())
 
-        //
-        // const category = 'Geography';
-        //
-        //
-        // let userEmail = "string@gmail.com"
-        //
-        // const apiURL = process.env.REACT_APP_API_URL
-        // let apiBody = {
-        //     questionsAttempted: "10",
-        //     correctAnswers: 5
-        // }
-        // fetch(`${apiURL}/api/stats/${userEmail}`, {
-        //     method: 'PATCH',
-        //     headers: {...generateAuthHeader()},
-        //     body: JSON.stringify(apiBody)
-        // }).then((r) => console.log(r.status))
-        //     .catch((error) => {
-        //                 console.log(error)
-        //             })
-        //
-        // fetch(`${apiURL}/api/questions/category?category=`+category, {
-        //     // auth header for using the currently logged in user's token for the API call
-        //     headers: {...generateAuthHeader()}
-        // })
-        //     .then((results) => results.json())
-        //     .then((data) =>{
-        //         this.setState(
-        //             {
-        //                 formData: data
-        //             }
-        //         )
-        //     })
-        //
-        //     .catch((error) => {
-        //         console.log(error)
-        //     })
     }
 
     handleClose = () => {
@@ -171,12 +136,92 @@ class Questions extends Component {
         }
     }
 
+    handleFinishGame = (e) =>{
+        let userEmail = "string@gmail.com"
+        const apiURL = process.env.REACT_APP_API_URL
+        let apiBody
+        let sessionCorrectAnswers = parseInt(localStorage.getItem("correctAnswers"))
+        let oldQuestionsAttempted
+        let oldCorrectAnswers
+        let newQuestionsAnsweredValue
+        let newCorrectAnswerValue
+
+        //Get userstats value from userstats db
+        fetch(`${apiURL}/api/stats/${userEmail}`, {
+            // auth header for using the currently logged in user's token for the API call
+            method: 'GET',
+            headers: {...generateAuthHeader()}
+        })
+            .then((results) => results.json())
+            .then((data) =>{
+                localStorage.setItem("userStatsQuestionCount", data.questionsAttempted.toString())
+                localStorage.setItem("userStatsCorrectCount", data.correctAnswers.toString())
+            })
+
+            .catch((error) => {
+                console.log(error)
+            })
+
+        //Add new game values to userstats
+        oldQuestionsAttempted = parseInt(localStorage.getItem("userStatsQuestionCount"))
+        oldCorrectAnswers = parseInt(localStorage.getItem("userStatsCorrectCount"))
+
+        newQuestionsAnsweredValue = this.state.questionCount + oldQuestionsAttempted
+        newCorrectAnswerValue = oldCorrectAnswers + sessionCorrectAnswers
+
+        console.log("this is question " + newQuestionsAnsweredValue)
+
+        apiBody = {
+            questionsAttempted: newQuestionsAnsweredValue,
+            correctAnswers: newCorrectAnswerValue
+        }
+
+        //Patch the new values to the userstats db
+        fetch(`${apiURL}/api/stats/${userEmail}`, {
+            method: 'PATCH',
+            headers: {'content-type': 'application/json', ...generateAuthHeader()},
+            body: JSON.stringify(apiBody)
+        }).then((r) => console.log(r.status))
+            .catch((error) => {
+                        console.log(error)
+                    })
+
+        //Deleting Localstorage Values at end of
+        e.preventDefault()
+        console.log("this worked")
+    }
+
 
     render() {
         return (
             <div className="Users">
                 <Header />
                 <h3 className="text-center" >Questions<div>{localStorage.getItem("correctAnswers")}</div></h3>
+
+                {/*<Card style={{width: '28rem', marginTop:'5rem', height: '30rem', margin: 'auto', padding: '10px',*/}
+                {/*    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>*/}
+                {/*    <Card.Body>*/}
+                {/*        {!this.state.showViewResults &&*/}
+                {/*            this.state.formData.map((question, idx) => {*/}
+                {/*                if (idx == this.state.questionsAnswered) {*/}
+                {/*                    return >*/}
+                {/*                }*/}
+                {/*            })*/}
+                {/*        }*/}
+                {/*        {!this.state.showViewResults &&*/}
+                {/*            this.state.formData.map((question, idx) => {*/}
+                {/*                if (idx == this.state.questionsAnswered) {*/}
+                {/*                    return <tr key={idx}>*/}
+                {/*                        <td>{question.question}</td>*/}
+                {/*                    </tr>*/}
+                {/*                }*/}
+                {/*            })*/}
+                {/*        }*/}
+
+                {/*    </Card.Body>*/}
+                {/*</Card>*/}
+
+
                 <table>
                     <thead>
                     {/*This will only show if showViewResults State variable is true*/}
@@ -234,7 +279,7 @@ class Questions extends Component {
 
                     <div>
 
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form onSubmit={this.nextQuestion}>
                             <Button variant="primary" type="submit">
                                 Submit
                             </Button>
@@ -244,6 +289,14 @@ class Questions extends Component {
                                 Reset
                             </Button>
                         </Form>
+                        {this.state.questionsAnswered == 9 &&
+                            <Form onSubmit={this.handleFinishGame}>
+                            <Button variant="primary" type="submit">
+                            Handle Finish Game
+                            </Button>
+                            </Form>
+                        }
+
                     </div>
                     </tbody>
                 </table>
