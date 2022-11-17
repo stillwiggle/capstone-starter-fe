@@ -5,9 +5,10 @@ import {generateAuthHeader} from "../../utils/authHelper"
 import Header from "../../components/header/Header"
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import {Modal} from "react-bootstrap";
-import {useParams} from "react-router-dom";
+import {Container, Modal} from "react-bootstrap";
 import Card from "react-bootstrap/Card";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 class Questions extends Component {
 
@@ -71,6 +72,10 @@ class Questions extends Component {
     nextQuestion = (e) => {
         let newValue = this.state.questionsAnswered + 1
         localStorage.setItem("questionsAnswered", newValue.toString())
+
+        if(newValue == 10){
+            this.handleFinishGame()
+        }
 
     }
 
@@ -196,94 +201,140 @@ class Questions extends Component {
         return (
             <div className="Users">
                 <Header />
-                <h3 className="text-center" >Questions<div>{localStorage.getItem("correctAnswers")}</div></h3>
-
-                {/*<Card style={{width: '28rem', marginTop:'5rem', height: '30rem', margin: 'auto', padding: '10px',*/}
-                {/*    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>*/}
-                {/*    <Card.Body>*/}
-                {/*        {!this.state.showViewResults &&*/}
-                {/*            this.state.formData.map((question, idx) => {*/}
-                {/*                if (idx == this.state.questionsAnswered) {*/}
-                {/*                    return >*/}
-                {/*                }*/}
-                {/*            })*/}
-                {/*        }*/}
-                {/*        {!this.state.showViewResults &&*/}
-                {/*            this.state.formData.map((question, idx) => {*/}
-                {/*                if (idx == this.state.questionsAnswered) {*/}
-                {/*                    return <tr key={idx}>*/}
-                {/*                        <td>{question.question}</td>*/}
-                {/*                    </tr>*/}
-                {/*                }*/}
-                {/*            })*/}
-                {/*        }*/}
-
-                {/*    </Card.Body>*/}
-                {/*</Card>*/}
-
-
-                <table>
-                    <thead>
-                    {/*This will only show if showViewResults State variable is true*/}
-                    {!this.state.showViewResults &&
-                    <tr>
-                        <th>Question {this.state.questionsAnswered + 1}</th>
-                    </tr> }
-                    {/*This will only show if showViewResults State variable is false*/}
-                    {this.state.showViewResults &&
-                        <tr>
-
-                            <div>
-                                <th>Results!</th>
-                                <div>{localStorage.getItem("correctAnswers")}</div>
-                                <div>{this.state.questionCount}</div>
-                            </div>
-                        </tr> }
-                    </thead>
-                    <tbody>
-                    {/*This will only show if showViewResults State variable is true*/}
+                <h3 className="text-center" style={{marginTop:'5rem', marginBottom: '5rem'}}>{this.props.match.params.category}</h3>
                     {!this.state.showViewResults &&
                         this.state.formData.map((question, idx) => {
+                            let newArray = [];
                             if (idx == this.state.questionsAnswered) {
-                                return <tr key={idx}>
-                                    <td>{question.question}</td>
-                                </tr>
+                                localStorage.setItem("correctAnswer", question.correctAnswer)
+                                newArray.push(question.correctAnswer)
+                                newArray.push(...question.incorrectAnswers)
+                                return <Card style={{width: '28rem', marginTop:'5rem', height: '32rem', margin: 'auto', padding: '10px',
+                                        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+                                            <Card.Title key={idx}
+                                                        value={question.question}
+                                                        style={{textAlign: 'center', marginBottom: '3rem'}}>
+                                                Question {this.state.questionsAnswered + 1}
+                                            </Card.Title>
+                                            <Card.Title key={idx}
+                                                        value={question.question}
+                                                        style={{marginBottom: '3rem', textAlign: 'center'}}>
+                                                {question.question}
+                                            </Card.Title>
+                                                <Container>
+                                                    <Row style={{marginLeft: '.25rem'}}>
+                                                        <Col sm={6}>
+                                                            <Button questionindex={idx.toString()}
+                                                                    onClick={this.setCurrentAnswer}
+                                                                    value={newArray[0]}
+                                                                    style={{ width: '10rem',
+                                                                        height: '5rem', marginBottom: '3rem',
+                                                                        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), ' +
+                                                                            '0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+                                                                {newArray[0]}
+                                                            </Button>
+                                                        </Col>
+                                                        <Col sm={6}>
+                                                            <Button questionindex={idx.toString()}
+                                                                    onClick={this.setCurrentAnswer}
+                                                                    value={newArray[1]}
+                                                                    style={{ width: '10rem',
+                                                                        height: '5rem', marginBottom: '3rem',
+                                                                        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), ' +
+                                                                            '0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+                                                                {newArray[1]}
+                                                            </Button>
+                                                        </Col>
+                                                        <Col sm={6}>
+                                                            <Button questionindex={idx.toString()}
+                                                                    onClick={this.setCurrentAnswer}
+                                                                    value={newArray[2]}
+                                                                    style={{ width: '10rem',
+                                                                        height: '5rem', marginBottom: '3rem',
+                                                                        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), ' +
+                                                                            '0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+                                                                {newArray[2]}
+                                                            </Button>
+                                                        </Col>
+                                                        <Col sm={6}>
+                                                            <Button questionindex={idx.toString()}
+                                                                    onClick={this.setCurrentAnswer}
+                                                                    value={newArray[3]}
+                                                                    style={{ width: '10rem',
+                                                                        height: '5rem', marginBottom: '3rem',
+                                                                        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), ' +
+                                                                            '0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+                                                                {newArray[3]}
+                                                            </Button>
+                                                        </Col>
+                                                    </Row>
+                                                </Container>
+                                                <Container>
+                                                    <Row style={{marginLeft: '.25rem'}}>
+                                                        <Col sm={6}>
+                                                            <Form onSubmit={this.resetAllLocalStorageValues}>
+                                                                <Button variant="primary"
+                                                                        type="submit"
+                                                                        style={{ width: '10rem',
+                                                                            height: '2.5rem', marginBottom: '3rem', marginTop: '1.25rem',
+                                                                            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), ' +
+                                                                        '0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+                                                                    Reset
+                                                                </Button>
+                                                            </Form>
+                                                        </Col>
+                                                        <Col sm={6}>
+                                                            <Form onSubmit={this.nextQuestion}>
+                                                                <Button variant="primary"
+                                                                        type="submit"
+                                                                        style={{ width: '10rem',
+                                                                    height: '2.5rem', marginBottom: '3rem', marginTop: '1.25rem',
+                                                                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), ' +
+                                                                        '0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+                                                                    Next
+                                                                </Button>
+                                                            </Form>
+                                                        </Col>
+                                                    </Row>
+                                                </Container>
+                                        </Card>
                             }
                         })
                     }
-                    {/*This will only show if showViewResults State variable is true*/}
-                    {!this.state.showViewResults &&
-                        this.state.formData.map((question, idx) => {
-                                let newArray = [];
-                                if (idx == this.state.questionsAnswered) {
-                                    localStorage.setItem("correctAnswer", question.correctAnswer)
-                                    newArray.push(question.correctAnswer)
-                                    newArray.push(...question.incorrectAnswers)
-                                    return <tr key={idx}>
-                                        <Button questionindex={idx.toString()} onClick={this.setCurrentAnswer} value={newArray[0]} correctanswer={question.correctAnswer}>
-                                            {newArray[0]}
-                                        </Button>
-                                        <Button key={idx} value={newArray[1]}>
-                                            {newArray[1]}
-                                        </Button>
-                                        <Button key={idx} value={newArray[2]}>
-                                            {newArray[2]}
-                                        </Button>
-                                        <Button key={idx} value={newArray[3]}>
-                                            {newArray[3]}
-                                        </Button>
-                                    </tr>
-                                }
-                            })
-                    }
+                <table>
+                    <thead>
+                    {this.state.showViewResults &&
+                        <Card style={{width: '28rem', marginTop:'5rem', height: '32rem', margin: 'auto', padding: '10px',
+                            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+                            <Card.Title style={{textAlign: 'center', marginBottom: '3rem'}}>
+                                View Results
+                            </Card.Title>
+                            <Card.Title style={{textAlign: 'center', marginBottom: '3rem'}}>
+                                View Results
+                            </Card.Title>
+                            <Card.Title style={{textAlign: 'center', marginBottom: '3rem'}}>
+                                View Results
+                            </Card.Title>
+                            <Card.Title style={{textAlign: 'center', marginBottom: '3rem'}}>
+                                View Results
+                            </Card.Title>
+                        </Card>
+              }
+                    </thead>
+                    {/*<tr>*/}
+
+                    {/*    <div>*/}
+                    {/*        <th>Results!</th>*/}
+                    {/*        <div>{localStorage.getItem("correctAnswers")}</div>*/}
+                    {/*        <div>{this.state.questionCount}</div>*/}
+                    {/*    </div>*/}
+                    {/*</tr>*/}
+                    <tbody>
+
 
                     <div>
 
-                        <Form onSubmit={this.nextQuestion}>
-                            <Button variant="primary" type="submit">
-                                Submit
-                            </Button>
-                        </Form>
+
                         <Form onSubmit={this.resetAllLocalStorageValues}>
                             <Button variant="primary" type="submit">
                                 Reset
