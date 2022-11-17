@@ -10,6 +10,7 @@ import { generateAuthHeader, getUserEmail } from "../../utils/authHelper"
 // importing components needed for the header 
 import Header from "../../components/header/Header"
 
+
 class Favorites extends Component {
 
     state = {
@@ -87,8 +88,8 @@ class Favorites extends Component {
                 <div className="container">
                     {flashMessage && <Alert variant="info">{flashMessage}</Alert>}
                 </div>
-
-                <h3 className="text-center" >Favorites</h3>
+                
+                <h3 className style={{ marginBottom: '1rem', marginTop: '1rem', textAlign: 'center' }} >Favorites</h3>
                 <Table>
                     <thead>
                         <tr>
