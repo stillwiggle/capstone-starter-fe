@@ -85,7 +85,7 @@ class Register extends Component {
 
                 {/* <h3 className="text-center" >Create an Account</h3> */}
                 <Card style={{
-                    width: '50%', marginTop: '5rem', height: '100%', margin: 'auto', padding: '10px',
+                    width: '35%', marginTop: '5rem', height: '100%', margin: 'auto', padding: '10px',
                     boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
                 }}>
 
