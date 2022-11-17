@@ -2,7 +2,7 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-function UserForm({ handleChange, handleSubmit, formData, isUpdate }) {
+function UserForm({ handleChange, handleSubmit, formData, isUpdate, handleDelete }) {
 
     return (
         <div className="UserForm container">
@@ -35,9 +35,7 @@ function UserForm({ handleChange, handleSubmit, formData, isUpdate }) {
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
-                <Button variant="danger" type="delete">
-                    Delete Profile
-                </Button>
+                
             </Form>
         </div>
     )
