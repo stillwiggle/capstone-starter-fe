@@ -1,19 +1,16 @@
 import React, { Component } from "react";
 import Alert from 'react-bootstrap/Alert';
-
 import { connect } from "react-redux";
 import * as authActions from "../../redux/actions/auth";
 import { bindActionCreators } from "redux";
-
 import AuthService from "../../authService";
 import { Redirect, withRouter } from "react-router-dom";
 import LoginForm from "../../components/loginForm/LoginForm";
-
-import Nav from "react-bootstrap/Nav";
+// import Nav from "react-bootstrap/Nav";
 import Card from "react-bootstrap/Card";
 import { Container } from "react-bootstrap";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+// import Row from "react-bootstrap/Row";
+// import Col from "react-bootstrap/Col";
 
 import Header from "../../components/header/Header";
 

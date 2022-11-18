@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-
+import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated"
 import {generateAuthHeader} from "../../utils/authHelper"
 
 import Header from "../../components/header/Header"
@@ -200,7 +200,7 @@ class Questions extends Component {
     render() {
         return (
             <div className="Users">
-                <Header />
+                <Header isAuthenticated={this.props.isAuthenticated} />
                 <h3 className="text-center" style={{marginTop:'5rem', marginBottom: '5rem'}}>{this.props.match.params.category}</h3>
                     {!this.state.showViewResults &&
                         this.state.formData.map((question, idx) => {
@@ -376,4 +376,4 @@ class Questions extends Component {
     }
 }
 
-export default Questions
+export default mustBeAuthenticated(Questions)

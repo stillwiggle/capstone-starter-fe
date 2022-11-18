@@ -1,11 +1,11 @@
 import React, { Component } from "react"
 import Table from 'react-bootstrap/Table'
 import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated";
-import Nav from "react-bootstrap/Nav";
+// import Nav from "react-bootstrap/Nav";
 import Card from "react-bootstrap/Card";
 import { Container } from "react-bootstrap";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+// import Row from "react-bootstrap/Row";
+// import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
 // importing the ability to retrieve and use the Auth Header for API calls
@@ -65,17 +65,17 @@ class GlobalStats extends Component {
                 }}>
 
                     <Card.Body>
-                    <Button href="/categories" size="lg"
-                                style={{
-                                    width: '100%', height: '3rem', marginBottom: '1rem',
-                                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-                                    textAlign: `center`
-                                }}>
-                                Play a Game
-                            </Button>
+                        <Button href="/categories" size="lg"
+                            style={{
+                                width: '100%', height: '3rem', marginBottom: '1rem',
+                                boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+                                textAlign: `center`
+                            }}>
+                            Play a Game
+                        </Button>
                         <Card.Title style={{ marginBottom: '1rem', marginTop: '1rem', textAlign: 'center' }}>Global Statistics</Card.Title>
                         <Container>
-                            
+
                             <Table>
                                 <thead>
                                     <tr>
@@ -93,7 +93,7 @@ class GlobalStats extends Component {
                                     }
                                 </tbody>
                             </Table>
-                            
+
                             <Favorites />
                         </Container>
                     </Card.Body>

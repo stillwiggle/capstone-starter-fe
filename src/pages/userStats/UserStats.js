@@ -1,19 +1,16 @@
 import React, { Component } from "react"
 import Table from 'react-bootstrap/Table'
 import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated";
-
 // importing the ability to retrieve and use the Auth Header for API calls
 import { generateAuthHeader } from "../../utils/authHelper"
-
 // importing components needed for the header 
 import Header from "../../components/header/Header"
 import Favorites from "../favorites/Favorites";
-
-import Nav from "react-bootstrap/Nav";
+// import Nav from "react-bootstrap/Nav";
 import Card from "react-bootstrap/Card";
 import { Container } from "react-bootstrap";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+// import Row from "react-bootstrap/Row";
+// import Col from "react-bootstrap/Col";
 
 class UserStats extends Component {
 
