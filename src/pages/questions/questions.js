@@ -1,6 +1,6 @@
 import React, { Component } from "react"
-
-import {generateAuthHeader} from "../../utils/authHelper"
+import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated"
+import {generateAuthHeader, getUserEmail} from "../../utils/authHelper"
 
 import Header from "../../components/header/Header"
 import Button from "react-bootstrap/Button";
@@ -19,8 +19,6 @@ class Questions extends Component {
         questionsAnswered: 0,
         questionCount: 10,
         correctAnswers: 0,
-        resultModalCorrect: false,
-        resultModalIncorrect: false,
         showViewResults: false,
         currentQuestion: "",
         currentAnswers: "",
@@ -80,8 +78,8 @@ class Questions extends Component {
         let newValue = this.state.questionsAnswered + 1
         localStorage.setItem("questionsAnswered", newValue.toString())
 
-        if(newValue == 9){
-            this.handleFinishGame()
+        if(newValue == 10){
+            this.handleEndGame()
         }
 
     }
@@ -139,85 +137,67 @@ class Questions extends Component {
     }
 
     fetchUserStats = (e) => {
-        let userEmail = "string@gmail.com"
         const apiURL = process.env.REACT_APP_API_URL
-        fetch(`${apiURL}/api/stats/${userEmail}`, {
+        fetch(`${apiURL}/api/stats/${getUserEmail()}`, {
             // auth header for using the currently logged in user's token for the API call
             method: 'GET',
             headers: {...generateAuthHeader()}
         })
             .then((results) => results.json())
             .then((data) =>{
-                localStorage.setItem("userStatsQuestionCount", data.questionsAttempted.toString())
-                localStorage.setItem("userStatsCorrectCount", data.correctAnswers.toString())
-
-                // this.setState(
-                //     {
-                //         apiBody: data
-                //     }
-                // )
-                console.log(this.state.apiBody)
+                localStorage.setItem("userStatsQuestionCount", data.questionsAttempted)
+                localStorage.setItem("userStatsCorrectCount", data.correctAnswers)
             })
 
             .catch((error) => {
                 console.log(error)
             })
-
-        console.log(this.state.apiBody)
-        console.log("Fetchuserstatsworks")
         return Promise.resolve();
     }
 
     createUserStatsAPIBody(){
-
-        // console.log("API Body" + this.state.apiBody[0].value)
-
-
         let oldQuestionValue = parseInt(localStorage.getItem("userStatsQuestionCount"))
         let oldCorrectValue = parseInt(localStorage.getItem("userStatsCorrectCount"))
 
-        console.log("test old ques value " + oldQuestionValue)
-        console.log("corr old ans value " + oldCorrectValue)
+        console.log({oldQuestionValue})
+        console.log({oldCorrectValue})
 
         let newQuestionValue = this.state.questionCount
         let newCorrectValue = parseInt(localStorage.getItem("correctAnswers"))
 
-        console.log("test new ques value " + newQuestionValue)
-        console.log("corr new ans value " + newCorrectValue)
+        console.log({newQuestionValue})
+        console.log({newCorrectValue})
 
         let questionsAttempted = newQuestionValue + oldQuestionValue
         let correctAnswers = newCorrectValue + oldCorrectValue
 
-        console.log("test ques value " + questionsAttempted)
-        console.log("corr ans value " + correctAnswers)
+        console.log({questionsAttempted})
+        console.log({correctAnswers})
 
         let apiBody = {
             questionsAttempted: questionsAttempted,
-            correctAnswers: correctAnswers,
-            wrongAnswers: 0,
-            email: "string@gmail.com"
+            correctAnswers: correctAnswers
         }
 
-        console.log("create user stats works")
         return apiBody
     }
 
-    handleEndGame = async (e) => {
-        await this.fetchUserStats()
-        // console.log("API Body" + this.state.apiBody)
-        let apiBody = this.createUserStatsAPIBody()
-        await this.patchUSerStats(apiBody)
-        this.resetCurrentQuestionAndAnswer()
-        this.resetAllLocalStorageValues()
+    handleEndGame = (e) => {
         e.preventDefault()
+        this.fetchUserStats().then( () => {
+            let apiBody = this.createUserStatsAPIBody()
+            this.patchUSerStats(apiBody)
+        } )
+
+
 
     }
 
     patchUSerStats(apiBody){
-        let userEmail = "string@gmail.com"
         const apiURL = process.env.REACT_APP_API_URL
-        fetch(`${apiURL}/api/stats/${userEmail}`, {
-            method: 'PUT',
+        console.log({apiBody})
+        fetch(`${apiURL}/api/stats/${getUserEmail()}`, {
+            method: 'PATCH',
             headers: {'content-type': 'application/json', ...generateAuthHeader()},
             body: JSON.stringify(apiBody)
         }).then((r) => console.log(r.status))
@@ -239,8 +219,8 @@ class Questions extends Component {
     render() {
         return (
             <div className="Users">
-                <Header />
-                <h1 className="text-center" style={{marginTop:'5rem', marginBottom: '5rem', fontStyle: '1000%', opacity: '.5'}}><div style={{fontSize: '200%', background: 'white'}}>{this.props.match.params.category}</div></h1>
+                <Header isAuthenticated={this.props.isAuthenticated} />
+                <h1 className="text-center" style={{marginTop:'5rem', marginBottom: '5rem', fontStyle: '1000%', opacity: '.85'}}><div style={{fontSize: '200%', background: 'white'}}>{this.props.match.params.category}</div></h1>
                     {!this.state.showViewResults &&
                         this.state.formData.map((question, idx) => {
                             let newArray = [];
@@ -248,7 +228,7 @@ class Questions extends Component {
                                 localStorage.setItem("correctAnswer", question.correctAnswer)
                                 newArray.push(question.correctAnswer)
                                 newArray.push(...question.incorrectAnswers)
-                                return <Card style={{width: '28rem', marginTop:'5rem', height: '32rem', margin: 'auto', padding: '10px',
+                                return <Card style={{width: '28rem', marginTop:'5rem', height: 'auto', margin: 'auto', padding: '10px',
                                         boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
                                             <Card.Title key={idx}
                                                         value={question.question}
@@ -316,7 +296,7 @@ class Questions extends Component {
                                                 <Container>
                                                     <Row style={{marginLeft: '.25rem'}}>
                                                         <Col sm={6}>
-                                                            <Form onSubmit={this.resetAllLocalStorageValues}>
+                                                            <Form onSubmit={this.sendToCategories}>
                                                                 <Button variant="outline-danger"
                                                                         type="submit"
                                                                         style={{ width: '10rem',
@@ -373,7 +353,7 @@ class Questions extends Component {
                                 height: '2.5rem', marginBottom: '3rem', marginTop: '1.25rem',
                                 boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), ' +
                                     '0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
-                        Quit
+                        Refresh Patch
                     </Button>
                 </Form>
             </div>
@@ -381,4 +361,4 @@ class Questions extends Component {
     }
 }
 
-export default Questions
+export default mustBeAuthenticated(Questions)

@@ -9,6 +9,7 @@ import { generateAuthHeader, getUserEmail } from "../../utils/authHelper"
 
 // importing components needed for the header 
 import Header from "../../components/header/Header"
+import Button from "react-bootstrap/Button";
 
 
 class Favorites extends Component {
@@ -100,8 +101,10 @@ class Favorites extends Component {
                     <tbody>
                         {this.state.favorites.map((email, idx) => {
                             return <tr key={idx}>
-                                <td>{email}</td>
-                                <td><button data-email={email} onClick={this.removeFavorites} className="remove-btn">Remove</button></td>
+                                <td style={{margin: 'auto',
+                                    width: '50%',
+                                    paddingTop: '1.25rem'}}>{email}</td>
+                                <td><Button variant="outline-danger" data-email={email} onClick={this.removeFavorites} className="remove-btn">Remove</Button></td>
                             </tr>
 
                         })
