@@ -49,8 +49,20 @@ class Categories extends Component {
     sendToQuestions = (e) => {
         let category = e.target.value.toString()
         console.log(category)
+        this.resetAllLocalStorageValues()
         this.props.history.push("/questions/"+category)
         console.log("thisworks"+e.target.value.toString())
+    }
+
+
+//This is helper function to reset all local storage values so you can retry the questions
+    resetAllLocalStorageValues() {
+        localStorage.setItem("currentAnswers", "")
+        localStorage.setItem("currentQuestion", "")
+        localStorage.setItem("correctAnswers", "0")
+        localStorage.setItem("questionsAnswered", "0")
+        localStorage.setItem("currentAnswers", "")
+        localStorage.setItem("currentQuestion", "")
     }
 
     render() {

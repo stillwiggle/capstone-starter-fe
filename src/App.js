@@ -53,6 +53,11 @@ function App() {
           component={Categories}
         />
         <Route
+            exact
+            path="/questions/:category"
+            component={Questions}
+        />
+        <Route
           exact
           path="/questions/:category"
           component={Questions}
