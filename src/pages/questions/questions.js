@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 
-import {generateAuthHeader} from "../../utils/authHelper"
+import {generateAuthHeader, getUserEmail} from "../../utils/authHelper"
 
 import Header from "../../components/header/Header"
 import Button from "react-bootstrap/Button";
@@ -137,9 +137,8 @@ class Questions extends Component {
     }
 
     fetchUserStats = (e) => {
-        let userEmail = "string@gmail.com"
         const apiURL = process.env.REACT_APP_API_URL
-        fetch(`${apiURL}/api/stats/${userEmail}`, {
+        fetch(`${apiURL}/api/stats/${getUserEmail()}`, {
             // auth header for using the currently logged in user's token for the API call
             method: 'GET',
             headers: {...generateAuthHeader()}
@@ -188,16 +187,13 @@ class Questions extends Component {
         this.fetchUserStats()
         let apiBody = this.createUserStatsAPIBody()
         this.patchUSerStats(apiBody)
-        // this.resetCurrentQuestionAndAnswer()
-        // this.resetAllLocalStorageValues()
         // e.preventDefault()
 
     }
 
     patchUSerStats(apiBody){
-        let userEmail = "string@gmail.com"
         const apiURL = process.env.REACT_APP_API_URL
-        fetch(`${apiURL}/api/stats/${userEmail}`, {
+        fetch(`${apiURL}/api/stats/${getUserEmail()}`, {
             method: 'PATCH',
             headers: {'content-type': 'application/json', ...generateAuthHeader()},
             body: JSON.stringify(apiBody)
