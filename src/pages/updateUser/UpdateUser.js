@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated";
 import { generateAuthHeader } from "../../utils/authHelper";
-
 import Alert from 'react-bootstrap/Alert';
-
 import Header from "../../components/header/Header";
+// import Nav from "react-bootstrap/Nav";
+import Card from "react-bootstrap/Card";
+import { Container } from "react-bootstrap";
+// import Row from "react-bootstrap/Row";
+// import Col from "react-bootstrap/Col";
 
 import UserForm from "../../components/userForm/UserForm";
 
@@ -29,7 +32,7 @@ class UpdateUser extends Component {
 
         this.getUser(email)
 
-        
+
     }
 
     getUser = (email) => {
@@ -51,7 +54,7 @@ class UpdateUser extends Component {
 
                 //update state with the data from the API causing the page to re-render
                 this.setState({
-                    formData: {...this.state.formData, ...data}
+                    formData: { ...this.state.formData, ...data }
                 });
             })
             //handle any errors/failures with getting data from the API
@@ -81,13 +84,13 @@ class UpdateUser extends Component {
 
         const email = this.props.match.params.email;
 
-        const newUserData = {...this.state.formData}
+        const newUserData = { ...this.state.formData }
 
-        if(!newUserData.password){
+        if (!newUserData.password) {
             delete newUserData.password
-        }else{
-            if(this.state.formData.password && this.state.formData.password !== event.target.confirmPassword.value){
-                this.setState({errorMessage: "The supplied passwords must match!"})
+        } else {
+            if (this.state.formData.password && this.state.formData.password !== event.target.confirmPassword.value) {
+                this.setState({ errorMessage: "The supplied passwords must match!" })
                 return;
             }
         }
@@ -104,7 +107,7 @@ class UpdateUser extends Component {
         })
             .then((response) => response.json()) // on success, turn the respons into JSON so we can work with it
             .then((data) => {
-                this.setState({successMessage: "Profile Updated Successfully"})
+                this.setState({ successMessage: "Profile Updated Successfully" })
                 this.getUser(email)
             })
             .catch(e => console.log(e.message)) //console.log any errors if the previous steps fail
@@ -122,13 +125,26 @@ class UpdateUser extends Component {
                     {this.state.successMessage && <Alert variant="info">{this.state.successMessage}</Alert>}
                 </div>
 
-                <h3 className="text-center" >Update Your Profile</h3>
-                <UserForm
-                    handleChange={this.handleChange}
-                    handleSubmit={this.handleSubmit}
-                    formData={this.state.formData}
-                    isUpdate={true}
-                />
+                {/* <h3 className="text-center" >Update Your Profile</h3> */}
+
+                <Card style={{
+                    width: '50%', marginTop: '5rem', height: '100%', margin: 'auto', padding: '10px',
+                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
+                }}>
+
+                    <Card.Body>
+                        <Card.Title style={{ marginBottom: '6rem', marginTop: '2rem', textAlign: 'center' }}>Update Your Profile</Card.Title>
+                        <Container>
+
+                            <UserForm
+                                handleChange={this.handleChange}
+                                handleSubmit={this.handleSubmit}
+                                formData={this.state.formData}
+                                isUpdate={true}
+                            />
+                        </Container>
+                    </Card.Body>
+                </Card>
 
             </div>
         )

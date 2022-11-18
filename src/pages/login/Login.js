@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 import Alert from 'react-bootstrap/Alert';
-
 import { connect } from "react-redux";
 import * as authActions from "../../redux/actions/auth";
 import { bindActionCreators } from "redux";
-
 import AuthService from "../../authService";
 import { Redirect, withRouter } from "react-router-dom";
 import LoginForm from "../../components/loginForm/LoginForm";
+// import Nav from "react-bootstrap/Nav";
+import Card from "react-bootstrap/Card";
+import { Container } from "react-bootstrap";
+// import Row from "react-bootstrap/Row";
+// import Col from "react-bootstrap/Col";
+
 import Header from "../../components/header/Header";
 
 class Login extends Component {
@@ -52,7 +56,7 @@ class Login extends Component {
         const flashMessage = params.get('message');
         if (this.state.success) {
             const redirect = params.get('redirect');
-            return <Redirect to={(redirect) ? redirect : "/protected"} />
+            return <Redirect to={(redirect) ? redirect : "/global-stats"} />
         }
         return (
             <div className="LoginForm">
@@ -64,12 +68,24 @@ class Login extends Component {
                     {flashMessage && <Alert variant="info">{flashMessage}</Alert>}
                 </div>
 
-                <LoginForm
-                    handleChange={this.handleChange}
-                    handleSubmit={this.handleSubmit}
-                    formData={this.state.formData}
-                />
+                <Card style={{
+                    width: '50%', marginTop: '5rem', height: '100%', margin: 'auto', padding: '10px',
+                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
+                }}>
 
+                    <Card.Body>
+                        {/* <Card.Title style={{ marginBottom: '6rem', marginTop: '2rem', textAlign: 'center' }}>Choose one to get started</Card.Title> */}
+                        <Container>
+
+                            <LoginForm
+                                handleChange={this.handleChange}
+                                handleSubmit={this.handleSubmit}
+                                formData={this.state.formData}
+                            />
+
+                        </Container>
+                    </Card.Body>
+                </Card>
             </div>
         )
     }

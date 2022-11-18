@@ -48,9 +48,9 @@ function App() {
           component={Users}
         />
         <Route
-            exact
-            path="/categories"
-            component={Categories}
+          exact
+          path="/categories"
+          component={Categories}
         />
         <Route
             exact
@@ -59,8 +59,8 @@ function App() {
         />
         <Route
           exact
-          path="/stats/:email"
-          component={UserStats}
+          path="/questions/:category"
+          component={Questions}
         />
         <Route
           exact
@@ -71,6 +71,11 @@ function App() {
           exact
           path="/favorites"
           component={Favorites}
+        />
+        <Route
+          exact
+          path="/global-stats"
+          component={GlobalStats}
         />
         <Route
           exact

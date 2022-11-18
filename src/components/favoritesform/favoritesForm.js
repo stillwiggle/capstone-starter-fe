@@ -2,7 +2,8 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-function favoritesForm({ handleChange, handleSubmit, formData, isUpdate }) {
+function FavoritesForm({ handleChange, handleSubmit, formData, isUpdate }) {
+
 
     return (
         <div className="favoritesForm container">
@@ -23,4 +24,4 @@ function favoritesForm({ handleChange, handleSubmit, formData, isUpdate }) {
 
 }
 
-export default favoritesForm
+export default FavoritesForm
