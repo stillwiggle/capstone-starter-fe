@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-
+import mustBeAuthenticated from "../../redux/hoc/mustBeAuthenticated"
 import {generateAuthHeader, getUserEmail} from "../../utils/authHelper"
 
 import Header from "../../components/header/Header"
@@ -216,7 +216,7 @@ class Questions extends Component {
     render() {
         return (
             <div className="Users">
-                <Header />
+                <Header isAuthenticated={this.props.isAuthenticated} />
                 <h1 className="text-center" style={{marginTop:'5rem', marginBottom: '5rem', fontStyle: '1000%', opacity: '.85'}}><div style={{fontSize: '200%', background: 'white'}}>{this.props.match.params.category}</div></h1>
                     {!this.state.showViewResults &&
                         this.state.formData.map((question, idx) => {
@@ -225,7 +225,7 @@ class Questions extends Component {
                                 localStorage.setItem("correctAnswer", question.correctAnswer)
                                 newArray.push(question.correctAnswer)
                                 newArray.push(...question.incorrectAnswers)
-                                return <Card style={{width: '28rem', marginTop:'5rem', height: '32rem', margin: 'auto', padding: '10px',
+                                return <Card style={{width: '28rem', marginTop:'5rem', height: 'auto', margin: 'auto', padding: '10px',
                                         boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
                                             <Card.Title key={idx}
                                                         value={question.question}
@@ -358,4 +358,4 @@ class Questions extends Component {
     }
 }
 
-export default Questions
+export default mustBeAuthenticated(Questions)
