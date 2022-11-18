@@ -145,8 +145,8 @@ class Questions extends Component {
         })
             .then((results) => results.json())
             .then((data) =>{
-                localStorage.setItem("userStatsQuestionCount", data.questionsAttempted.toString())
-                localStorage.setItem("userStatsCorrectCount", data.correctAnswers.toString())
+                localStorage.setItem("userStatsQuestionCount", data.questionsAttempted)
+                localStorage.setItem("userStatsCorrectCount", data.correctAnswers)
             })
 
             .catch((error) => {
@@ -159,20 +159,20 @@ class Questions extends Component {
         let oldQuestionValue = parseInt(localStorage.getItem("userStatsQuestionCount"))
         let oldCorrectValue = parseInt(localStorage.getItem("userStatsCorrectCount"))
 
-        console.log("test old ques value " + oldQuestionValue)
-        console.log("corr old ans value " + oldCorrectValue)
+        console.log({oldQuestionValue})
+        console.log({oldCorrectValue})
 
         let newQuestionValue = this.state.questionCount
         let newCorrectValue = parseInt(localStorage.getItem("correctAnswers"))
 
-        console.log("test new ques value " + newQuestionValue)
-        console.log("corr new ans value " + newCorrectValue)
+        console.log({newQuestionValue})
+        console.log({newCorrectValue})
 
         let questionsAttempted = newQuestionValue + oldQuestionValue
         let correctAnswers = newCorrectValue + oldCorrectValue
 
-        console.log("test ques value " + questionsAttempted)
-        console.log("corr ans value " + correctAnswers)
+        console.log({questionsAttempted})
+        console.log({correctAnswers})
 
         let apiBody = {
             questionsAttempted: questionsAttempted,
@@ -183,16 +183,19 @@ class Questions extends Component {
     }
 
     handleEndGame = (e) => {
+        e.preventDefault()
+        this.fetchUserStats().then( () => {
+            let apiBody = this.createUserStatsAPIBody()
+            this.patchUSerStats(apiBody)
+        } )
 
-        this.fetchUserStats()
-        let apiBody = this.createUserStatsAPIBody()
-        this.patchUSerStats(apiBody)
-        // e.preventDefault()
+
 
     }
 
     patchUSerStats(apiBody){
         const apiURL = process.env.REACT_APP_API_URL
+        console.log({apiBody})
         fetch(`${apiURL}/api/stats/${getUserEmail()}`, {
             method: 'PATCH',
             headers: {'content-type': 'application/json', ...generateAuthHeader()},
