@@ -69,7 +69,8 @@ class Categories extends Component {
         return (
             <div className="Users">
                 <Header isAuthenticated={this.props.isAuthenticated} />
-                <h3 className="text-center" style={{marginTop:'5rem', marginBottom: '5rem'}}>Categories</h3>
+                <h3 className="text-center" style={{marginTop:'5rem', marginBottom: '5rem', fontStyle: '1000%', opacity: '.85'}}>
+                    <div style={{fontSize: '200%', background: 'white'}}>Categories</div></h3>
 
                 <Card style={{width: '28rem', marginTop:'5rem', height: '30rem', margin: 'auto', padding: '10px',
                     boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>

@@ -15,6 +15,7 @@ import { generateAuthHeader, getUserEmail } from "../../utils/authHelper"
 
 // importing components needed for the header 
 import Header from "../../components/header/Header"
+import Button from "react-bootstrap/Button";
 
 class Users extends Component {
 
@@ -160,7 +161,11 @@ class Users extends Component {
                                         <td>{user.firstName}</td>
                                         <td>{user.lastName}</td>
                                         <td>{user.email}</td>
-                                        <td><button {...((this.isFriend(user.email) || user.email === getUserEmail()) && { disabled: true })} data-email={user.email} onClick={this.addFavorites} className="update-btn">Add to Favorites</button></td>
+                                        <td><Button variant="outline-success"
+                                                    {...((this.isFriend(user.email) || user.email === getUserEmail())
+                                                        && { disabled: true })}
+                                                    data-email={user.email} onClick={this.addFavorites}
+                                                    className="update-btn">Add to Favorites</Button></td>
                                     </tr>
 
                                 })
