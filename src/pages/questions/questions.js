@@ -19,13 +19,15 @@ class Questions extends Component {
         questionsAnswered: 0,
         questionCount: 10,
         correctAnswers: 0,
-        resultModal: false,
+        resultModalCorrect: false,
+        resultModalIncorrect: false,
         showViewResults: false,
         currentQuestion: "",
         currentAnswers: "",
         correctAnswer: "",
         userStatsQuestionCount: 0,
-        userStatsCorrectCount: 0
+        userStatsCorrectCount: 0,
+        apiBody: []
     }
 
     componentDidMount() {
@@ -48,6 +50,11 @@ class Questions extends Component {
 
         //This pulls the category from the URL param
         let category = this.props.match.params.category
+        if (category == "Film%20&%20TV"){
+            category = "Geography"
+        } else {
+            console.log(category)
+        }
 
 
         fetch(`${apiURL}/api/questions/category?category=`+category, {
@@ -73,26 +80,16 @@ class Questions extends Component {
         let newValue = this.state.questionsAnswered + 1
         localStorage.setItem("questionsAnswered", newValue.toString())
 
-        if(newValue == 10){
+        if(newValue == 9){
             this.handleFinishGame()
         }
 
     }
 
-    handleClose = () => {
-        this.setState({resultModal: false})
-    }
-
-    handleShow = () => {
-        this.setState({resultModal: true})
-    }
-
-
     setCurrentAnswer = (e) => {
         //This takes the value of the event target and set's it as the current answer in local storage
         localStorage.setItem("currentAnswers", e.target.value.toString())
     }
-
 
     determineCorrectAnswer() {
         let correctAnswer = localStorage.getItem("correctAnswer")
@@ -131,7 +128,7 @@ class Questions extends Component {
     setQuestionsAnsweredNumber() {
         let currentQuestion = localStorage.getItem("questionsAnswered");
 
-        if (currentQuestion > 10){
+        if (currentQuestion > 9){
             this.setState({showViewResults: true})
         //Sometimes the questionsAnswered will have a value of NaN. This if statement is to get past this
         } if (currentQuestion == NaN) {
@@ -141,17 +138,9 @@ class Questions extends Component {
         }
     }
 
-    handleFinishGame = (e) =>{
+    fetchUserStats = (e) => {
         let userEmail = "string@gmail.com"
         const apiURL = process.env.REACT_APP_API_URL
-        let apiBody
-        let sessionCorrectAnswers = parseInt(localStorage.getItem("correctAnswers"))
-        let oldQuestionsAttempted
-        let oldCorrectAnswers
-        let newQuestionsAnsweredValue
-        let newCorrectAnswerValue
-
-        //Get userstats value from userstats db
         fetch(`${apiURL}/api/stats/${userEmail}`, {
             // auth header for using the currently logged in user's token for the API call
             method: 'GET',
@@ -161,29 +150,74 @@ class Questions extends Component {
             .then((data) =>{
                 localStorage.setItem("userStatsQuestionCount", data.questionsAttempted.toString())
                 localStorage.setItem("userStatsCorrectCount", data.correctAnswers.toString())
+
+                // this.setState(
+                //     {
+                //         apiBody: data
+                //     }
+                // )
+                console.log(this.state.apiBody)
             })
 
             .catch((error) => {
                 console.log(error)
             })
 
-        //Add new game values to userstats
-        oldQuestionsAttempted = parseInt(localStorage.getItem("userStatsQuestionCount"))
-        oldCorrectAnswers = parseInt(localStorage.getItem("userStatsCorrectCount"))
+        console.log(this.state.apiBody)
+        console.log("Fetchuserstatsworks")
+        return Promise.resolve();
+    }
 
-        newQuestionsAnsweredValue = this.state.questionCount + oldQuestionsAttempted
-        newCorrectAnswerValue = oldCorrectAnswers + sessionCorrectAnswers
+    createUserStatsAPIBody(){
 
-        console.log("this is question " + newQuestionsAnsweredValue)
+        // console.log("API Body" + this.state.apiBody[0].value)
 
-        apiBody = {
-            questionsAttempted: newQuestionsAnsweredValue,
-            correctAnswers: newCorrectAnswerValue
+
+        let oldQuestionValue = parseInt(localStorage.getItem("userStatsQuestionCount"))
+        let oldCorrectValue = parseInt(localStorage.getItem("userStatsCorrectCount"))
+
+        console.log("test old ques value " + oldQuestionValue)
+        console.log("corr old ans value " + oldCorrectValue)
+
+        let newQuestionValue = this.state.questionCount
+        let newCorrectValue = parseInt(localStorage.getItem("correctAnswers"))
+
+        console.log("test new ques value " + newQuestionValue)
+        console.log("corr new ans value " + newCorrectValue)
+
+        let questionsAttempted = newQuestionValue + oldQuestionValue
+        let correctAnswers = newCorrectValue + oldCorrectValue
+
+        console.log("test ques value " + questionsAttempted)
+        console.log("corr ans value " + correctAnswers)
+
+        let apiBody = {
+            questionsAttempted: questionsAttempted,
+            correctAnswers: correctAnswers,
+            wrongAnswers: 0,
+            email: "string@gmail.com"
         }
 
-        //Patch the new values to the userstats db
+        console.log("create user stats works")
+        return apiBody
+    }
+
+    handleEndGame = async (e) => {
+        await this.fetchUserStats()
+        // console.log("API Body" + this.state.apiBody)
+        let apiBody = this.createUserStatsAPIBody()
+        await this.patchUSerStats(apiBody)
+        this.resetCurrentQuestionAndAnswer()
+        this.resetAllLocalStorageValues()
+        e.preventDefault()
+
+    }
+
+    patchUSerStats(apiBody){
+        let userEmail = "string@gmail.com"
+        const apiURL = process.env.REACT_APP_API_URL
         fetch(`${apiURL}/api/stats/${userEmail}`, {
-            method: 'PATCH',
+            method: 'PUT',
             headers: {'content-type': 'application/json', ...generateAuthHeader()},
             body: JSON.stringify(apiBody)
         }).then((r) => console.log(r.status))
@@ -191,9 +225,14 @@ class Questions extends Component {
                         console.log(error)
                     })
 
-        //Deleting Localstorage Values at end of
-        e.preventDefault()
-        console.log("this worked")
+        console.log("patch user stats works")
+        return Promise.resolve();
+    }
+
+    sendToCategories = (e) => {
+        this.resetAllLocalStorageValues()
+        this.resetCurrentQuestionAndAnswer()
+        this.props.history.push("/categories")
     }
 
 
@@ -201,7 +240,7 @@ class Questions extends Component {
         return (
             <div className="Users">
                 <Header />
-                <h3 className="text-center" style={{marginTop:'5rem', marginBottom: '5rem'}}>{this.props.match.params.category}</h3>
+                <h1 className="text-center" style={{marginTop:'5rem', marginBottom: '5rem', fontStyle: '1000%', opacity: '.5'}}><div style={{fontSize: '200%', background: 'white'}}>{this.props.match.params.category}</div></h1>
                     {!this.state.showViewResults &&
                         this.state.formData.map((question, idx) => {
                             let newArray = [];
@@ -226,6 +265,8 @@ class Questions extends Component {
                                                         <Col sm={6}>
                                                             <Button questionindex={idx.toString()}
                                                                     onClick={this.setCurrentAnswer}
+                                                                    correctanswer={question.correctAnswer}
+                                                                    variant="secondary"
                                                                     value={newArray[0]}
                                                                     style={{ width: '10rem',
                                                                         height: '5rem', marginBottom: '3rem',
@@ -237,6 +278,7 @@ class Questions extends Component {
                                                         <Col sm={6}>
                                                             <Button questionindex={idx.toString()}
                                                                     onClick={this.setCurrentAnswer}
+                                                                    variant="secondary"
                                                                     value={newArray[1]}
                                                                     style={{ width: '10rem',
                                                                         height: '5rem', marginBottom: '3rem',
@@ -248,6 +290,7 @@ class Questions extends Component {
                                                         <Col sm={6}>
                                                             <Button questionindex={idx.toString()}
                                                                     onClick={this.setCurrentAnswer}
+                                                                    variant="secondary"
                                                                     value={newArray[2]}
                                                                     style={{ width: '10rem',
                                                                         height: '5rem', marginBottom: '3rem',
@@ -259,6 +302,7 @@ class Questions extends Component {
                                                         <Col sm={6}>
                                                             <Button questionindex={idx.toString()}
                                                                     onClick={this.setCurrentAnswer}
+                                                                    variant="secondary"
                                                                     value={newArray[3]}
                                                                     style={{ width: '10rem',
                                                                         height: '5rem', marginBottom: '3rem',
@@ -273,19 +317,20 @@ class Questions extends Component {
                                                     <Row style={{marginLeft: '.25rem'}}>
                                                         <Col sm={6}>
                                                             <Form onSubmit={this.resetAllLocalStorageValues}>
-                                                                <Button variant="primary"
+                                                                <Button variant="outline-danger"
                                                                         type="submit"
                                                                         style={{ width: '10rem',
                                                                             height: '2.5rem', marginBottom: '3rem', marginTop: '1.25rem',
                                                                             boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), ' +
                                                                         '0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
-                                                                    Reset
+                                                                    Quit
                                                                 </Button>
                                                             </Form>
                                                         </Col>
                                                         <Col sm={6}>
-                                                            <Form onSubmit={this.nextQuestion}>
-                                                                <Button variant="primary"
+                                                            <Form onSubmit={this.nextQuestion} style={{ color: 'green'}}>
+                                                                <Button variant="outline-success"
+                                                                        class="btn btn-secondary"
                                                                         type="submit"
                                                                         style={{ width: '10rem',
                                                                     height: '2.5rem', marginBottom: '3rem', marginTop: '1.25rem',
@@ -293,6 +338,7 @@ class Questions extends Component {
                                                                         '0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
                                                                     Next
                                                                 </Button>
+
                                                             </Form>
                                                         </Col>
                                                     </Row>
@@ -301,76 +347,35 @@ class Questions extends Component {
                             }
                         })
                     }
-                <table>
-                    <thead>
+
                     {this.state.showViewResults &&
                         <Card style={{width: '28rem', marginTop:'5rem', height: '32rem', margin: 'auto', padding: '10px',
                             boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
-                            <Card.Title style={{textAlign: 'center', marginBottom: '3rem'}}>
+                            <Card.Title style={{textAlign: 'center', marginBottom: '3rem', marginTop: '4rem'}}>
                                 View Results
                             </Card.Title>
                             <Card.Title style={{textAlign: 'center', marginBottom: '3rem'}}>
-                                View Results
+                                {localStorage.getItem("correctAnswers")} / {this.state.questionCount} Correct
                             </Card.Title>
                             <Card.Title style={{textAlign: 'center', marginBottom: '3rem'}}>
-                                View Results
+                                Great work!!! Thank you for Playing!
                             </Card.Title>
-                            <Card.Title style={{textAlign: 'center', marginBottom: '3rem'}}>
-                                View Results
-                            </Card.Title>
+                            <Button onClick={this.sendToCategories} style={{marginTop: '3rem', height: '6rem', marginLeft: '2rem', marginRight: '2rem'}} variant="success" size="lg">
+                                Play Again
+                            </Button>
                         </Card>
-              }
-                    </thead>
-                    {/*<tr>*/}
+                    }
 
-                    {/*    <div>*/}
-                    {/*        <th>Results!</th>*/}
-                    {/*        <div>{localStorage.getItem("correctAnswers")}</div>*/}
-                    {/*        <div>{this.state.questionCount}</div>*/}
-                    {/*    </div>*/}
-                    {/*</tr>*/}
-                    <tbody>
-
-
-                    <div>
-
-
-                        <Form onSubmit={this.resetAllLocalStorageValues}>
-                            <Button variant="primary" type="submit">
-                                Reset
-                            </Button>
-                        </Form>
-                        {this.state.questionsAnswered == 9 &&
-                            <Form onSubmit={this.handleFinishGame}>
-                            <Button variant="primary" type="submit">
-                            Handle Finish Game
-                            </Button>
-                            </Form>
-                        }
-
-                    </div>
-                    </tbody>
-                </table>
-
-                <Button variant="primary" onClick={this.handleShow}>
-                    Launch demo modal
-                </Button>
-
-                <Modal show={this.state.resultModal} onHide={this.handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Question {this.state.questionsAnswered}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body><h5>Woohoo, you're reading this text in a modal!</h5></Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={this.handleClose}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={this.handleClose}>
-                            Save Changes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
+                <Form onSubmit={this.handleEndGame}>
+                    <Button variant="outline-danger"
+                            type="submit"
+                            style={{ width: '10rem',
+                                height: '2.5rem', marginBottom: '3rem', marginTop: '1.25rem',
+                                boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), ' +
+                                    '0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+                        Quit
+                    </Button>
+                </Form>
             </div>
         )
     }
